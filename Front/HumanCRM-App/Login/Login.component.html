@@ -1,0 +1,78 @@
+<div class="auth-layout">
+  <div class="auth-card">
+    <!-- Lado esquerdo: conteúdo -->
+    <div class="auth-left">
+      <div class="auth-logo">
+        <img src="assets/logo.png" alt="Logo" />
+        <h1>HumanCRM</h1>
+        <p>Portal de acesso seguro ao painel de gestão.</p>
+      </div>
+
+      <form class="auth-form">
+        <h2>Bem-vindo(a) de volta</h2>
+        <p class="auth-subtitle">
+          Entre com suas credenciais para acessar o sistema.
+        </p>
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="seuemail@empresa.com"
+            [(ngModel)]="login.email"
+            name="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Sua senha"
+            [(ngModel)]="login.senha"
+            name="senha"
+          />
+        </div>
+
+        <div class="auth-options">
+          <label class="remember-me">
+            <input type="checkbox" [(ngModel)]="login.lembrar" name="lembrar" />
+            <span>Lembrar de mim</span>
+          </label>
+
+          <button type="button" class="link-button">
+            Esqueci minha senha
+          </button>
+        </div>
+
+        <button type="button" class="btn-project primary auth-submit" (click)="onLogin()">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          Entrar
+        </button>
+      </form>
+
+      <p class="auth-footer-text">
+        Dúvidas sobre o acesso? <span>Fale com o administrador do sistema.</span>
+      </p>
+    </div>
+
+    <!-- Lado direito: destaque visual -->
+    <div class="auth-right">
+      <div class="auth-highlight-card">
+        <h3>Gestão inteligente de clientes</h3>
+        <p>
+          Acompanhe agenda, histórico de atendimento e indicadores em tempo real
+          em um painel único.
+        </p>
+
+        <ul>
+          <li><i class="fa-solid fa-circle-check"></i> Cadastros unificados</li>
+          <li><i class="fa-solid fa-circle-check"></i> Agenda centralizada</li>
+          <li><i class="fa-solid fa-circle-check"></i> Visão financeira rápida</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

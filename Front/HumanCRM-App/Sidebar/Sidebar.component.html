@@ -1,0 +1,61 @@
+<button class="toggle-btn" (click)="sidebarOpen = !sidebarOpen">
+  <i class="fa-solid fa-bars"></i>
+</button>
+
+<div class="layout" [class.sidebar-open]="sidebarOpen">
+  <nav class="sidebar">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="Logo" class="logo-img" />
+      <h2 class="logo-title">HumanCRM</h2>
+    </div>
+
+    <h4 class="menu-title">Menu</h4>
+
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+      <i class="fa-solid fa-house"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a routerLink="/agendamento" routerLinkActive="active" class="nav-link">
+      <i class="fa-solid fa-calendar-days"></i>
+      <span>Agendamentos</span>
+    </a>
+
+    <a routerLink="/clientes" routerLinkActive="active" class="nav-link">
+      <i class="fa-solid fa-user-gear"></i>
+      <span>Clientes</span>
+    </a>
+
+    <a routerLink="/servicos" routerLinkActive="active" class="nav-link">
+      <i class="fa-solid fa-hand-holding-medical"></i>
+      <span>Serviços</span>
+    </a>
+
+    <a routerLink="/financeiro" routerLinkActive="active" class="nav-link">
+      <i class="fa-solid fa-hand-holding-dollar"></i>
+      <span>Financeiro</span>
+    </a>
+
+    <a routerLink="/profissionais" routerLinkActive="active" class="nav-link">
+      <i class="fas fa-user-tie"></i>
+      <span>Profissionais</span>
+    </a>
+
+    <a routerLink="/users" routerLinkActive="active" class="nav-link">
+      <i class="fa-solid fa-users"></i>
+      <span>Usuários</span>
+    </a>
+
+    <div class="logout-container">
+      <button class="logout-btn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Sair
+      </button>
+    </div>
+  </nav>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

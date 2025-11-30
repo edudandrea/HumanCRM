@@ -1,0 +1,105 @@
+/* CONTAINER PRINCIPAL */
+.outlook-container {
+  padding: 20px;
+  background: #f3f6fc;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* CABEÇALHO */
+.header-semana h2 {
+  margin: 0;
+  color: #1b3f9b;
+  font-weight: 600;
+}
+
+.header-semana span {
+  color: #2d4ea3;
+  font-size: 14px;
+}
+
+/* GRADE SEMANAL */
+.grade-semanal {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+}
+
+/* COLUNA DO DIA */
+.coluna {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  height: 540px;
+}
+
+/* HEADER DO DIA */
+.coluna-header {
+  text-align: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e6f2;
+}
+
+.coluna-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2449b1;
+}
+
+.coluna-header .data {
+  font-size: 13px;
+  color: #5e6a91;
+}
+
+/* EVENTOS */
+.eventos {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.evento {
+  display: flex;
+  gap: 10px;
+  background: #eef2ff;
+  padding: 10px;
+  border-left: 4px solid #355ad5;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.evento:hover {
+  background: #e1e7ff;
+  transform: translateX(4px);
+}
+
+.hora {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2d4ea8;
+  min-width: 55px;
+}
+
+.conteudo .titulo {
+  font-weight: 600;
+  color: #1c3fa0;
+}
+
+.conteudo .servico,
+.conteudo .profissional {
+  font-size: 13px;
+  color: #55628b;
+}
+
+.vazio {
+  margin-top: 20px;
+  text-align: center;
+  color: #9aa6c4;
+  font-size: 14px;
+}

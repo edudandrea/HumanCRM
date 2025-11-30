@@ -1,0 +1,36 @@
+<div class="outlook-container">
+
+  <div class="header-semana">
+    <h2>Agenda da Semana</h2>
+    <span>{{ semanaInicio | date:'dd/MM' }} — {{ semanaFim | date:'dd/MM' }}</span>
+  </div>
+
+  <div class="grade-semanal">
+    @for (dia of agendaSemana; track dia) {
+      <div class="coluna">
+        <div class="coluna-header">
+          <h3>{{ dia.label }}</h3>
+          <div class="data">{{ dia.data | date:'dd/MM' }}</div>
+        </div>
+        <div class="eventos">
+          @for (item of dia.itens; track item) {
+            <div class="evento">
+              <div class="hora">{{ item.horario }}</div>
+              <div class="conteudo">
+                <div class="titulo">{{ item.nomeCliente }}</div>
+                <div class="servico">{{ item.servico }}</div>
+                <div class="profissional">{{ item.profissional }}</div>
+              </div>
+            </div>
+          }
+          @if (dia.itens.length === 0) {
+            <div class="vazio">
+              Nenhum agendamento
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
