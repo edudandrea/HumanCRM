@@ -33,291 +33,494 @@
       <i class="bi bi-person-vcard"></i>
       <span>Cadastro de Clientes</span>
     </li>
+
+    <li
+      class="page-tab"
+      [class.active]="activeTab === 3"
+      (click)="setActiveTab(3)"
+    >
+      <i class="bi bi-graph-up-arrow"></i>
+      <span>Prospecção de Clientes</span>
+    </li>
   </ul>
 
   <!-- TAB 1 - Pesquisa -->
-  @if (activeTab === 1) {
-    <div class="surface-card">
-      <div class="surface-header">
-        <div>
-          <h2>Pesquisa de Clientes</h2>
-          <p>Filtre rapidamente pelos principais dados cadastrais.</p>
+
+  <div class="surface-card" *ngIf="activeTab === 1">
+    <div class="surface-header">
+      <div>
+        <h2>Pesquisa de Clientes</h2>
+        <p>Filtre rapidamente pelos principais dados cadastrais.</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group small">
+        <label>Código do Cliente</label>
+        <input type="text" />
+      </div>
+      <div class="form-group">
+        <label>Nome do Cliente</label>
+        <input type="text" />
+      </div>
+      <div class="form-group small">
+        <label>CPF/CNPJ</label>
+        <input type="text" />
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <button type="button" class="btn-project primary">
+        <i class="bi bi-search"></i>
+        Pesquisar
+      </button>
+      <button type="button" class="btn-project ghost">
+        <i class="bi bi-plus-lg"></i>
+        Novo Cliente
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB 2 - Cadastro -->
+
+    <!-- TAB 2 - Cadastro -->
+  <div class="surface-card" *ngIf="activeTab === 2">
+    <div class="surface-header">
+      <div>
+        <h2>Dados do Cliente</h2>
+        <p>Preencha as informações cadastrais, de contato e documentos.</p>
+      </div>
+    </div>
+
+    <div class="cliente-form">
+      <!-- Cabeçalho -->
+      <div class="form-header">
+        <div class="form-row">
+          <div class="form-group small">
+            <label for="codigo">Código do Cliente</label>
+            <input type="text" id="codigo" [(ngModel)]="cliente.codigo" />
+          </div>
+          <div class="form-group large">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" [(ngModel)]="cliente.nome" />
+          </div>
+          <div class="form-group tipo-pessoa-group">
+            <label>Tipo de Pessoa</label>
+            <div class="pill-toggle">
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'Física'"
+                (click)="tipoPessoa = 'Física'"
+              >
+                Física
+              </button>
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'Jurídica'"
+                (click)="tipoPessoa = 'Jurídica'"
+              >
+                Jurídica
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group small">
-          <label>Código do Cliente</label>
-          <input type="text" />
+      <!-- Sub-abas -->
+      <div class="sub-tabs">
+        <button
+          class="sub-tab"
+          [class.active]="subTabActive === 1"
+          (click)="setActiveSubTab(1)"
+        >
+          Contato & Endereço
+        </button>
+        <button
+          class="sub-tab"
+          [class.active]="subTabActive === 2"
+          (click)="setActiveSubTab(2)"
+        >
+          {{
+            tipoPessoa && tipoPessoa === 'Jurídica'
+              ? 'Dados Empresariais'
+              : 'Dados Pessoais'
+          }}
+        </button>
+      </div>
+
+      <!-- Conteúdo da aba “Contato” -->
+      <div class="tab-content" *ngIf="subTabActive === 1">
+        <h3>Endereço</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rua/Avenida</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>Complemento</label>
+            <input type="text" />
+          </div>
+          <div class="form-group small">
+            <label>CEP</label>
+            <input type="text" />
+          </div>
         </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" />
+          </div>
+        </div>
+
+        <h3>Contato</h3>
+        <div class="form-row">
+          <div class="form-group small">
+            <label>Data do Cadastro</label>
+            <input type="text" />
+          </div>
+          <div class="form-group small">
+            <label>DDD</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>Celular/WhatsApp</label>
+            <input type="text" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rede Social</label>
+            <input type="text" />
+            <div class="checkbox-row">
+              <label><input type="checkbox" /> Instagram</label>
+              <label><input type="checkbox" /> Facebook</label>
+              <label><input type="checkbox" /> Twitter</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Responsável pelo Contato</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>Origem do Contato</label>
+            <input type="text" />
+          </div>
+          <div class="form-group">
+            <label>Observações</label>
+            <input type="text" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Conteúdo da aba Documentos -->
+      <div class="tab-content" *ngIf="subTabActive === 2">
+        <div class="form-section" *ngIf="tipoPessoa === 'Física'">
+          <h3>Documentos – Pessoa Física</h3>
+          <div class="form-row">
+            <div class="form-group small">
+              <label>RG</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>CPF</label>
+              <input type="text" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group small">
+              <label>Expedidor</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>Sexo</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>Data de Nascimento</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>Estado Civil</label>
+              <input type="text" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section" *ngIf="tipoPessoa === 'Jurídica'">
+          <h3>Documentos – Pessoa Jurídica</h3>
+          <div class="form-row">
+            <div class="form-group small">
+              <label>CNPJ</label>
+              <input type="text" />
+            </div>
+            <div class="form-group">
+              <label>Razão Social</label>
+              <input type="text" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group small">
+              <label>Data da Fundação</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>Inscrição Estadual</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>Inscrição Municipal</label>
+              <input type="text" />
+            </div>
+            <div class="form-group small">
+              <label>Data do Contato</label>
+              <input type="text" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rede Social</label>
+              <input type="text" />
+            </div>
+            <div class="form-group">
+              <label>Responsável do Contato</label>
+              <input type="text" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <button type="button" class="btn-project primary">
+        <i class="fa-regular fa-floppy-disk"></i>
+        Salvar
+      </button>
+      <button type="button" class="btn-project ghost">
+        <i class="fa-solid fa-repeat"></i>
+        Alterar
+      </button>
+    </div>
+  </div>  
+
+    <!-- TAB 3 - Prospecção de Clientes -->
+
+    <div class="surface-card" *ngIf="activeTab === 3">
+      <div class="surface-header">
+        <div>
+          <h2>Prospecção de Clientes</h2>
+          <p>
+            Pesquise o cliente e registre as informações de prospecção e
+            follow-up.
+          </p>
+        </div>
+      </div>
+
+      <!-- Área de pesquisa do cliente -->
+      <div class="form-row">
         <div class="form-group">
           <label>Nome do Cliente</label>
-          <input type="text" />
+          <input
+            type="text"
+            placeholder="Digite parte do nome"
+            [(ngModel)]="filtroProspeccao.nome"
+          />
         </div>
         <div class="form-group small">
           <label>CPF/CNPJ</label>
-          <input type="text" />
+          <input
+            type="text"
+            placeholder="Somente números"
+            [(ngModel)]="filtroProspeccao.documento"
+          />
+        </div>
+        <div class="form-group small">
+          <label>Cidade</label>
+          <input type="text" [(ngModel)]="filtroProspeccao.cidade" />
         </div>
       </div>
 
       <div class="actions-row">
-        <button type="button" class="btn-project primary">
+        <button
+          type="button"
+          class="btn-project primary"
+          (click)="pesquisarClientesProspeccao()"
+        >
           <i class="bi bi-search"></i>
-          Pesquisar
-        </button>
-        <button type="button" class="btn-project ghost">
-          <i class="bi bi-plus-lg"></i>
-          Novo Cliente
+          Pesquisar Cliente
         </button>
       </div>
-    </div>
-  }
 
-  <!-- TAB 2 - Cadastro -->
-  @if (activeTab === 2) {
-    <div class="surface-card">
-      <div class="surface-header">
-        <div>
-          <h2>Dados do Cliente</h2>
-          <p>Preencha as informações cadastrais, de contato e documentos.</p>
-        </div>
-      </div>
-
-      <div class="cliente-form">
-        <!-- Cabeçalho -->
-        <div class="form-header">
-          <div class="form-row">
-            <div class="form-group small">
-              <label for="codigo">Código do Cliente</label>
-              <input type="text" id="codigo" [(ngModel)]="cliente.codigo" />
-            </div>
-            <div class="form-group large">
-              <label for="nome">Nome</label>
-              <input type="text" id="nome" [(ngModel)]="cliente.nome" />
-            </div>
-            <div class="form-group tipo-pessoa-group">
-              <label>Tipo de Pessoa</label>
-              <div class="pill-toggle">
+      <!-- Resultado da pesquisa (lista de clientes) -->
+      <div
+        class="surface-subcard"
+        *ngIf="clientesProspeccao && clientesProspeccao.length"
+      >
+        <h3>Resultados da Pesquisa</h3>
+        <table class="table-prospeccao">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>CPF/CNPJ</th>
+              <th>Cidade</th>
+              <th style="width: 80px">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of clientesProspeccao">
+              <td>{{ c.codigo }}</td>
+              <td>{{ c.nome }}</td>
+              <td>{{ c.documento }}</td>
+              <td>{{ c.cidade }}</td>
+              <td>
                 <button
                   type="button"
-                  class="pill-option"
-                  [class.active]="tipoPessoa === 'Física'"
-                  (click)="tipoPessoa = 'Física'"
+                  class="btn-project ghost"
+                  (click)="selecionarClienteProspeccao(c)"
                 >
-                  Física
+                  Selecionar
                 </button>
-                <button
-                  type="button"
-                  class="pill-option"
-                  [class.active]="tipoPessoa === 'Jurídica'"
-                  (click)="tipoPessoa = 'Jurídica'"
-                >
-                  Jurídica
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sub-abas -->
-        <div class="sub-tabs">
-          <button
-            class="sub-tab"
-            [class.active]="subTabActive === 1"
-            (click)="setActiveSubTab(1)"
-          >
-            Contato & Endereço
-          </button>
-          <button
-            class="sub-tab"
-            [class.active]="subTabActive === 2"
-            (click)="setActiveSubTab(2)"
-          >
-            {{
-              tipoPessoa && tipoPessoa === 'Jurídica'
-                ? 'Dados Empresariais'
-                : 'Dados Pessoais'
-            }}
-          </button>
-        </div>
-
-        <!-- Conteúdo da aba “Contato” -->
-        @if (subTabActive === 1) {
-          <div class="tab-content">
-            <h3>Endereço</h3>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Rua/Avenida</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>Complemento</label>
-                <input type="text" />
-              </div>
-              <div class="form-group small">
-                <label>CEP</label>
-                <input type="text" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label>Bairro</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>Cidade</label>
-                <input type="text" />
-              </div>
-            </div>
-
-            <h3>Contato</h3>
-            <div class="form-row">
-              <div class="form-group small">
-                <label>Data do Cadastro</label>
-                <input type="text" />
-              </div>
-              <div class="form-group small">
-                <label>DDD</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>Telefone</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>E-mail</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>Celular/WhatsApp</label>
-                <input type="text" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label>Rede Social</label>
-                <input type="text" />
-                <div class="checkbox-row">
-                  <label><input type="checkbox" /> Instagram</label>
-                  <label><input type="checkbox" /> Facebook</label>
-                  <label><input type="checkbox" /> Twitter</label>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Responsável pelo Contato</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>Origem do Contato</label>
-                <input type="text" />
-              </div>
-              <div class="form-group">
-                <label>Observações</label>
-                <input type="text" />
-              </div>
-            </div>
-          </div>
-        }
-
-        <!-- Conteúdo da aba Documentos -->
-        @if (subTabActive === 2) {
-          <div class="tab-content">
-            @if (tipoPessoa === 'Física') {
-              <div class="form-section">
-                <h3>Documentos – Pessoa Física</h3>
-                <div class="form-row">
-                  <div class="form-group small">
-                    <label>RG</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>CPF</label>
-                    <input type="text" />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group small">
-                    <label>Expedidor</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>Sexo</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>Data de Nascimento</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>Estado Civil</label>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-            }
-
-            @if (tipoPessoa === 'Jurídica') {
-              <div class="form-section">
-                <h3>Documentos – Pessoa Jurídica</h3>
-                <div class="form-row">
-                  <div class="form-group small">
-                    <label>CNPJ</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group">
-                    <label>Razão Social</label>
-                    <input type="text" />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group small">
-                    <label>Data da Fundação</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>Inscrição Estadual</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>Inscrição Municipal</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group small">
-                    <label>Data do Contato</label>
-                    <input type="text" />
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label>Rede Social</label>
-                    <input type="text" />
-                  </div>
-                  <div class="form-group">
-                    <label>Responsável do Contato</label>
-                    <input type="text" />
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
-        }
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="form-footer">
-        <button type="button" class="btn-project primary">
-          <i class="fa-regular fa-floppy-disk"></i>
-          Salvar
-        </button>
-        <button type="button" class="btn-project ghost">
-          <i class="fa-solid fa-repeat"></i>
-          Alterar
-        </button>
+      <!-- Dados da prospecção -->
+      <div class="surface-subcard">
+        <h3>Dados da Prospecção</h3>
+
+        <div class="form-row">
+          <div class="form-group large">
+            <label>Cliente Selecionado</label>
+            <input
+              type="text"
+              [value]="prospeccao.nomeCliente"
+              placeholder="Selecione um cliente na lista acima"
+              readonly
+            />
+          </div>
+          <div class="form-group small">
+            <label>Etapa da Prospecção</label>
+            <select [(ngModel)]="prospeccao.etapa">
+              <option value="">Selecione...</option>
+              <option value="Lead">Lead</option>
+              <option value="Contato Inicial">Contato Inicial</option>
+              <option value="Proposta Enviada">Proposta Enviada</option>
+              <option value="Negociação">Negociação</option>
+              <option value="Fechado">Fechado</option>
+              <option value="Perdido">Perdido</option>
+            </select>
+          </div>
+          <div class="form-group small">
+            <label>Probabilidade (%)</label>
+            <input
+              type="number"
+              min="0"
+              max="100"
+              [(ngModel)]="prospeccao.probabilidade"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Origem do Contato</label>
+            <input
+              type="text"
+              placeholder="Indicação, redes sociais, anúncio, etc."
+              [(ngModel)]="prospeccao.origemContato"
+            />
+          </div>
+          <div class="form-group">
+            <label>Interesse Principal</label>
+            <input
+              type="text"
+              placeholder="Produto/Serviço de interesse"
+              [(ngModel)]="prospeccao.interessePrincipal"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Necessidade do Cliente</label>
+            <textarea
+              rows="2"
+              [(ngModel)]="prospeccao.necessidade"
+              placeholder="Descreva a dor/necessidade principal do cliente"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group small">
+            <label>Data do Próximo Contato</label>
+            <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
+          </div>
+          <div class="form-group small">
+            <label>Canal do Próximo Contato</label>
+            <select [(ngModel)]="prospeccao.canal">
+              <option value="">Selecione...</option>
+              <option value="Telefone">Telefone</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="E-mail">E-mail</option>
+              <option value="Visita Presencial">Visita Presencial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Responsável pela Prospecção</label>
+            <input type="text" [(ngModel)]="prospeccao.responsavel" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Observações / Histórico do Contato</label>
+            <textarea rows="3" [(ngModel)]="prospeccao.observacoes"></textarea>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button
+            type="button"
+            class="btn-project primary"
+            (click)="salvarProspeccao()"
+          >
+            <i class="fa-regular fa-floppy-disk"></i>
+            Salvar Prospecção
+          </button>
+          <button
+            type="button"
+            class="btn-project ghost"
+            (click)="limparProspeccao()"
+          >
+            <i class="fa-solid fa-repeat"></i>
+            Limpar
+          </button>
+        </div>
       </div>
     </div>
-  }
-</div>
+
+    
+  </div>
+

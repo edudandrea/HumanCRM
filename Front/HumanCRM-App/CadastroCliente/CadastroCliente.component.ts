@@ -1,28 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-CadastroCliente',
-    templateUrl: './CadastroCliente.component.html',
-    styleUrls: ['./CadastroCliente.component.scss'],
-    standalone: false
+  selector: 'app-CadastroCliente',
+  templateUrl: './CadastroCliente.component.html',
+  styleUrls: ['./CadastroCliente.component.scss'],
+  standalone: false,
 })
 export class CadastroClienteComponent implements OnInit {
-
   activeTab: number = 1;
   cliente: any = {};
   subTabActive: number = 1;
   isCNPJ: boolean = false;
   tipoPessoa: string = 'Física';
 
+  filtroProspeccao = {
+    nome: '',
+    documento: '',
+    cidade: '',
+  };
 
-  constructor() { }
+  clientesProspeccao: any[] = [];
 
-  ngOnInit() {
-  }
+  prospeccao = {
+    clienteId: null as number | null,
+    nomeCliente: '',
+    etapa: '',
+    probabilidade: null as number | null,
+    origemContato: '',
+    interessePrincipal: '',
+    necessidade: '',
+    dataProximoContato: '',
+    canal: '',
+    responsavel: '',
+    observacoes: '',
+  };
+
+  constructor() {}
+
+  ngOnInit() {}
 
   setTipoPessoa(tipo: string): void {
-  this.tipoPessoa = tipo;
-}
+    this.tipoPessoa = tipo;
+  }
 
   setActiveTab(tabNumber: number) {
     this.activeTab = tabNumber;
@@ -32,4 +51,19 @@ export class CadastroClienteComponent implements OnInit {
     this.subTabActive = subTabNumber;
   }
 
+  salvarProspeccao(){
+
+  }
+
+  limparProspeccao(){
+
+  }
+
+  selecionarClienteProspeccao(cliente: any){
+
+  }
+
+  pesquisarClientesProspeccao(){
+
+  }
 }

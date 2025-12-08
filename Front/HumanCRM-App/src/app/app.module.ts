@@ -18,7 +18,8 @@ import { AgendaComponent } from 'Agenda/Agenda.component';
 import { LoginComponent } from 'Login/Login.component';
 import { LayoutComponent } from 'Layout/Layout.component';
 
-@NgModule({ declarations: [
+
+@NgModule({ declarations: [	
         AppComponent,
         CadastroClienteComponent,
         SidebarComponent,
@@ -26,8 +27,9 @@ import { LayoutComponent } from 'Layout/Layout.component';
         UsersComponentComponent,
         AgendaComponent,
         LoginComponent,
-        LayoutComponent
-    ],
+        LayoutComponent,
+        
+   ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         FormsModule,
