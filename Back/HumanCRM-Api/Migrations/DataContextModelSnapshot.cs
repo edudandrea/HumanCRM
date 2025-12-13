@@ -21,30 +21,26 @@ namespace HumanCRM_Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Bairro")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Celular")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Celular")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Cep")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Cep")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Cidade")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Codigo")
-                        .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Complemento")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CpfCnpj")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CpfCnpj")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("DataCadastro")
                         .HasColumnType("TEXT");
@@ -52,15 +48,18 @@ namespace HumanCRM_Api.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Estado")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Numero")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Numero")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Observacoes")
+                    b.Property<string>("Obs")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OrigemContato")

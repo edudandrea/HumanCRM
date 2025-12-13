@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using HumanCRM_Api.Models;
 
 namespace HumanCRM_Api.Models
@@ -7,6 +8,7 @@ namespace HumanCRM_Api.Models
         public int Id { get; set; }
 
         // FK para Cliente
+        [JsonIgnore]
         public int ClienteId { get; set; }
         public Clientes Cliente { get; set; } = null!;
 

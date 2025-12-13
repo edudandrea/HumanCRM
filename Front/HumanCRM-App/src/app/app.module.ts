@@ -17,6 +17,8 @@ import { UsersComponentComponent } from 'Users/Users.component';
 import { AgendaComponent } from 'Agenda/Agenda.component';
 import { LoginComponent } from 'Login/Login.component';
 import { LayoutComponent } from 'Layout/Layout.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 @NgModule({ declarations: [	
@@ -30,14 +32,20 @@ import { LayoutComponent } from 'Layout/Layout.component';
         LayoutComponent,
         
    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], imports: [
+        BrowserModule,
         AppRoutingModule,
         FormsModule,
         NgxSpinnerModule,
-        ToastrModule.forRoot({ timeOut: 5000,
+        ModalModule.forRoot(),
+        ToastrModule.forRoot({ timeOut: 1000,
             positionClass: 'toast-bottom-right',
             preventDuplicates: true,
             progressBar: true,
             closeButton: true,
-        })], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        })], providers: [
+            provideAnimations(),
+            provideHttpClient(withInterceptorsFromDi())
+        
+        ] })
 export class AppModule { }

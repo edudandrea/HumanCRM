@@ -7,6 +7,7 @@ import { LoginComponent } from 'Login/Login.component';
 import { SidebarComponent } from 'Sidebar/Sidebar.component';
 import { UsersComponentComponent } from 'Users/Users.component';
 
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {

@@ -24,7 +24,7 @@ namespace HumanCRM_Api.Data
             // Configurações básicas
             modelBuilder.Entity<Clientes>(entity =>
             {
-                entity.Property(c => c.Codigo)
+                entity.Property(c => c.Id)
                       .IsRequired()
                       .HasMaxLength(50);
 
