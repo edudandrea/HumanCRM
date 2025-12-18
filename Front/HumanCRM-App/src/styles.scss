@@ -114,6 +114,12 @@
 }
 
 /* Botões */
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-project {
   border-radius: 999px;
   padding: 8px 18px;
@@ -142,6 +148,17 @@
 }
 
 .btn-project.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 35px rgba(34, 193, 195, 0.4);
+}
+
+.btn-project.cancel {
+  background: linear-gradient(135deg, #f35e5e, #f07556);
+  color: #ffffff;
+  box-shadow: 0 12px 25px rgba(34, 193, 195, 0.35);
+}
+
+.btn-project.cancel:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 35px rgba(34, 193, 195, 0.4);
 }
@@ -202,6 +219,25 @@ label {
   font-weight: 500;
   color: #4b5563;
   margin-bottom: 4px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 14px;
+}
+
+.readonly-field {
+  background-color: #f4f6f8;
+  border: 1px solid #a6abb1;
+  padding-right: 35px;
 }
 
 input,
@@ -786,5 +822,163 @@ body {
     opacity: 1;
   }
 }
+
+.prospeccao-card {
+  padding: 12px;
+  border-left: 4px solid #10c3bb;
+  background: #f8f9fb;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.prospeccao-card:hover {
+  background: #eef3f6;
+}
+
+.btn-historico {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 0.9rem;
+  }
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  &.active {
+    background: #0ea5e9;
+    color: #ffffff;
+    border-color: #0ea5e9;
+  }
+
+  .badge {
+    background: rgba(0, 0, 0, 0.08);
+    color: inherit;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  &.active .badge {
+    background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.prospeccoes-historico {
+  animation: fadeSlide 0.25s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.prospeccoes-historico {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.historico-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.prospeccao-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.etapa {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #374151;
+  text-transform: uppercase;
+}
+
+/* Cores por etapa */
+.etapa.lead { background: #e0f2fe; color: #0369a1; }
+.etapa.contato { background: #fef9c3; color: #92400e; }
+.etapa.negociação { background: #fae8ff; color: #7e22ce; }
+.etapa.fechado { background: #dcfce7; color: #166534; }
+.etapa.perdido { background: #fee2e2; color: #991b1b; }
+
+.data {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.observacao {
+  font-size: 0.85rem;
+  color: #475569;
+  margin: 0.35rem 0 0.5rem;
+}
+
+.card-footer {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #64748b;
+
+  i {
+    margin-right: 0.25rem;
+  }
+}
+
+.prospeccao-card.active {
+  border-color: #0ea5e9;
+  background: #f0f9ff;
+  transform: scale(0.98);
+}
+
+
+
 
 

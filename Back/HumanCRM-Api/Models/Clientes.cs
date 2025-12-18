@@ -14,8 +14,9 @@ namespace HumanCRM_Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }         
         public string Nome { get; set; } = "";       
-        public string TipoPessoa { get; set; } = "Física";        
-        public int CpfCnpj { get; set; }
+        public string TipoPessoa { get; set; } = "Física";  
+        public string? RG { get; set; }      
+        public string? CpfCnpj { get; set; }
         public int Cep { get; set; }
         public string? Rua { get; set; }
         public int Numero { get; set; }
@@ -26,6 +27,7 @@ namespace HumanCRM_Api.Models
         public string? Complemento { get; set; }
 
         // Contato
+        public int DDD { get; set; }
         public string? Telefone { get; set; }
         public int Celular { get; set; }
         public string? Email { get; set; }
@@ -33,9 +35,15 @@ namespace HumanCRM_Api.Models
         public string? ResponsavelContato { get; set; }
         public string? OrigemContato { get; set; }
         public string? Obs { get; set; }
-
+        public string? RazaoSocial { get; set; }
+        public int IE { get; set; }
+        public int IM { get; set; } 
+        public string? OrgaoExpedidor { get; set; }
+        public int Sexo { get; set; }
+        public int EstadoCivil { get; set; }
         public DateTime? DataCadastro { get; set; }
-        
+        public DateTime? DataFuncacao { get; set; }  
+        public DateTime? DataContato { get; set; }     
         public ICollection<ProspeccaoCliente> Prospeccoes { get; set; } = new List<ProspeccaoCliente>();
     }
 }

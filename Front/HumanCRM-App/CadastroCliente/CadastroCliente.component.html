@@ -73,11 +73,13 @@
         />
       </div>
       <div class="form-group small">
-            <label>Telefone</label>
-            <input type="text"
-           placeholder="Telefone"
-           [(ngModel)]="filtroClientes.telefone" />
-          </div>
+        <label>Telefone</label>
+        <input
+          type="text"
+          placeholder="Telefone"
+          [(ngModel)]="filtroClientes.telefone"
+        />
+      </div>
     </div>
 
     <div class="actions-row">
@@ -122,11 +124,23 @@
         <div class="form-row">
           <div class="form-group small">
             <label for="codigo">Código do Cliente</label>
-            <input type="text" id="codigo" [(ngModel)]="idCliente" />
+            <input
+              type="text"
+              id="codigo"
+              [(ngModel)]="idCliente"
+              readonly
+              class="readonly-field"
+            />
           </div>
           <div class="form-group large">
             <label for="nome">Nome</label>
-            <input type="text" id="nome" [(ngModel)]="nome" />
+            <input
+              type="text"
+              id="nome"
+              [(ngModel)]="nome"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group tipo-pessoa-group">
             <label>Tipo de Pessoa</label>
@@ -146,6 +160,14 @@
                 (click)="tipoPessoa = 'Jurídica'"
               >
                 Jurídica
+              </button>
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'Outros'"
+                (click)="tipoPessoa = 'Outros'"
+              >
+                Outros
               </button>
             </div>
           </div>
@@ -180,26 +202,66 @@
         <div class="form-row">
           <div class="form-group">
             <label>Rua/Avenida</label>
-            <input type="text" id="rua" [(ngModel)]="rua"/>
+            <input
+              type="text"
+              id="rua"
+              [(ngModel)]="rua"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>Complemento</label>
-            <input type="text" id="Complemento" [(ngModel)]="complemento"/>
+            <input
+              type="text"
+              id="Complemento"
+              [(ngModel)]="complemento"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group small">
             <label>CEP</label>
-            <input type="text" id="cep" [(ngModel)]="cep"/>
+            <input
+              type="text"
+              id="cep"
+              [(ngModel)]="cep"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Bairro</label>
-            <input type="text" id="bairro" [(ngModel)]="bairro" />
+            <input
+              type="text"
+              id="bairro"
+              [(ngModel)]="bairro"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>Cidade</label>
-            <input type="text" id="cidade" [(ngModel)]="cidade"/>
+            <input
+              type="text"
+              id="cidade"
+              [(ngModel)]="cidade"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <input
+              type="text"
+              id="estado"
+              [(ngModel)]="estado"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
         </div>
 
@@ -211,26 +273,57 @@
           </div>
           <div class="form-group small">
             <label>DDD</label>
-            <input type="text" />
+            <input
+              type="text"
+              id="ddd"
+              [(ngModel)]="ddd"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>Telefone</label>
-            <input type="text" id="telefone" [(ngModel)]="telefone"/>
+            <input
+              type="text"
+              id="telefone"
+              [(ngModel)]="telefone"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>E-mail</label>
-            <input type="text" id="email" [(ngModel)]="email"/>
+            <input
+              type="text"
+              id="email"
+              [(ngModel)]="email"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>Celular/WhatsApp</label>
-            <input type="text" />
+            <input
+              type="text"
+              id="celular"
+              [(ngModel)]="celular"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Rede Social</label>
-            <input type="text" />
+            <input
+              type="text"
+              id="redeSocial"
+              name="redeSocial"
+              [(ngModel)]="redeSocial"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
             <div class="checkbox-row">
               <label><input type="checkbox" /> Instagram</label>
               <label><input type="checkbox" /> Facebook</label>
@@ -239,15 +332,35 @@
           </div>
           <div class="form-group">
             <label>Responsável pelo Contato</label>
-            <input type="text" id="responsavel" [(ngModel)]="responsavelContato"/>
+            <input
+              type="text"
+              id="responsavel"
+              name="responsavelContato"
+              [(ngModel)]="responsavelContato"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>Origem do Contato</label>
-            <input type="text" />
+            <input
+              type="text"
+              id="origemContato"
+              name="origemContato"
+              [(ngModel)]="origemContato"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
           <div class="form-group">
             <label>Observações</label>
-            <input type="text" id="observacoes" [(ngModel)]="obs"/>
+            <input
+              type="text"
+              id="observacoes"
+              [(ngModel)]="obs"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
           </div>
         </div>
       </div>
@@ -259,30 +372,60 @@
           <div class="form-row">
             <div class="form-group small">
               <label>RG</label>
-              <input type="text" />
+              <input
+                type="text"
+                id="rg"
+                [(ngModel)]="rg"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group small">
               <label>CPF</label>
-              <input type="text" id="cpf" [(ngModel)]="cpfCnpj" />
+              <input
+                type="text"
+                id="cpf"
+                [(ngModel)]="cpfCnpj"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group small">
               <label>Expedidor</label>
-              <input type="text" />
+              <input
+                type="text"
+                id="orgaoExpedidor"
+                [(ngModel)]="orgaoExpedidor"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group small">
               <label>Sexo</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group small">
               <label>Data de Nascimento</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group small">
               <label>Estado Civil</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
           </div>
         </div>
@@ -292,11 +435,21 @@
           <div class="form-row">
             <div class="form-group small">
               <label>CNPJ</label>
-              <input type="text" />
+              <input
+                type="text"
+                [(ngModel)]="cpfCnpj"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group">
               <label>Razão Social</label>
-              <input type="text" />
+              <input
+                type="text"
+                [(ngModel)]="razaoSocial"
+                [readonly]="!podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
           </div>
 
@@ -307,26 +460,46 @@
             </div>
             <div class="form-group small">
               <label>Inscrição Estadual</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readOnly]="podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group small">
               <label>Inscrição Municipal</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readOnly]="podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group small">
               <label>Data do Contato</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readOnly]="podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Rede Social</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readOnly]="podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
             <div class="form-group">
               <label>Responsável do Contato</label>
-              <input type="text" />
+              <input
+                type="text"
+                [readOnly]="podeSalvar"
+                [class.readonly-field]="!podeSalvar"
+              />
             </div>
           </div>
         </div>
@@ -334,117 +507,102 @@
     </div>
 
     <div class="form-footer">
-      <button type="button" class="btn-project primary">
+      <button
+        type="button"
+        class="btn-project primary"
+        (click)="salvarCliente()"
+        [disabled]="!podeSalvar"
+      >
         <i class="fa-regular fa-floppy-disk"></i>
         Salvar
       </button>
-      <button type="button" class="btn-project ghost">
+      <button type="button" class="btn-project ghost" (click)="alterar()">
         <i class="fa-solid fa-repeat"></i>
         Alterar
+      </button>
+      <button type="button" class="btn-project cancel" (click)="cancelar()">
+        <i class="fa-solid fa-repeat"></i>
+        Cancelar
       </button>
     </div>
   </div>
 
   <!-- TAB 3 - Prospecção de Clientes -->
 
+  <!-- TAB 3 - Prospecção de Clientes -->
   <div class="surface-card" *ngIf="activeTab === 3">
     <div class="surface-header">
       <div>
         <h2>Prospecção de Clientes</h2>
-        <p>
-          Pesquise o cliente e registre as informações de prospecção e
-          follow-up.
-        </p>
       </div>
     </div>
 
-    <!-- Área de pesquisa do cliente -->
+    <!-- Dados do cliente selecionado -->
     <div class="form-row">
-      <div class="form-group">
-        <label>Nome do Cliente</label>
+      <div class="form-group small">
+        <label>Código do Cliente</label>
         <input
           type="text"
-          placeholder="Digite parte do nome"
-          [(ngModel)]="filtroProspeccao.nome"
+          [(ngModel)]="idCliente"
+          readonly
+          class="readonly-field"
         />
       </div>
+
+      <div class="form-group">
+        <label>Nome do Cliente</label>
+        <input type="text" [(ngModel)]="nome" readonly class="readonly-field" />
+      </div>
+
       <div class="form-group small">
         <label>CPF/CNPJ</label>
         <input
           type="text"
-          placeholder="Somente números"
-          [(ngModel)]="filtroProspeccao.documento"
+          [(ngModel)]="cpfCnpj"
+          readonly
+          class="readonly-field"
         />
       </div>
-      <div class="form-group small">
-        <label>Cidade</label>
-        <input type="text" [(ngModel)]="filtroProspeccao.cidade" />
-      </div>
     </div>
 
-    <div class="actions-row">
-      <button
-        type="button"
-        class="btn-project primary"
-        (click)="pesquisarClientesProspeccao()"
-      >
-        <i class="bi bi-search"></i>
-        Pesquisar Cliente
-      </button>
-    </div>
-
-    <!-- Resultado da pesquisa (lista de clientes) -->
-    <div
-      class="surface-subcard"
-      *ngIf="clientesProspeccao && clientesProspeccao.length"
-    >
-      <h3>Resultados da Pesquisa</h3>
-      <table class="table-prospeccao">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nome</th>
-            <th>CPF/CNPJ</th>
-            <th>Cidade</th>
-            <th style="width: 80px">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let c of clientesProspeccao">
-            <td>{{ c.codigo }}</td>
-            <td>{{ c.nome }}</td>
-            <td>{{ c.documento }}</td>
-            <td>{{ c.cidade }}</td>
-            <td>
-              <button
-                type="button"
-                class="btn-project ghost"
-                (click)="selecionarClienteProspeccao(c)"
-              >
-                Selecionar
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Dados da prospecção -->
+    <!-- FORMULÁRIO DE PROSPECÇÃO -->
     <div class="surface-subcard">
+      <!-- BOTÃO DO HISTÓRICO (AQUI É O PONTO CRÍTICO) -->
+      <div class="form-row justify-end" *ngIf="prospeccoes?.length">
+        <button
+          type="button"
+          class="btn-historico"
+          title="Visualizar histórico de prospecções"
+          (click)="toggleHistorico()"
+          [class.active]="mostrarHistorico"
+        >
+          <i
+            class="fa-solid"
+            [ngClass]="
+              mostrarHistorico ? 'fa-chevron-up' : 'fa-clock-rotate-left'
+            "
+          ></i>
+
+          <span>
+            {{ mostrarHistorico ? "Ocultar histórico" : "Ver histórico" }}
+          </span>
+
+          <span class="badge">
+            {{ prospeccoes.length }}
+          </span>
+        </button>
+      </div>
+
       <h3>Dados da Prospecção</h3>
 
       <div class="form-row">
         <div class="form-group large">
-          <label>Cliente Selecionado</label>
-          <input
-            type="text"
-            [value]="prospeccao.nomeCliente"
-            placeholder="Selecione um cliente na lista acima"
-            readonly
-          />
+          <label>Contato da Prospecção</label>
+          <input type="text" [value]="nome" readonly />
         </div>
+
         <div class="form-group small">
-          <label>Etapa da Prospecção</label>
+          <label>Etapa</label>
           <select [(ngModel)]="prospeccao.etapa">
             <option value="">Selecione...</option>
             <option value="Lead">Lead</option>
@@ -455,6 +613,7 @@
             <option value="Perdido">Perdido</option>
           </select>
         </div>
+
         <div class="form-group small">
           <label>Probabilidade (%)</label>
           <input
@@ -469,40 +628,30 @@
       <div class="form-row">
         <div class="form-group">
           <label>Origem do Contato</label>
-          <input
-            type="text"
-            placeholder="Indicação, redes sociais, anúncio, etc."
-            [(ngModel)]="prospeccao.origemContato"
-          />
+          <input type="text" [(ngModel)]="prospeccao.origemContato" />
         </div>
+
         <div class="form-group">
           <label>Interesse Principal</label>
-          <input
-            type="text"
-            placeholder="Produto/Serviço de interesse"
-            [(ngModel)]="prospeccao.interessePrincipal"
-          />
+          <input type="text" [(ngModel)]="prospeccao.interessePrincipal" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Necessidade do Cliente</label>
-          <textarea
-            rows="2"
-            [(ngModel)]="prospeccao.necessidade"
-            placeholder="Descreva a dor/necessidade principal do cliente"
-          ></textarea>
+          <label>Necessidade</label>
+          <textarea rows="2" [(ngModel)]="prospeccao.necessidade"></textarea>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group small">
-          <label>Data do Próximo Contato</label>
+          <label>Próximo Contato</label>
           <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
         </div>
+
         <div class="form-group small">
-          <label>Canal do Próximo Contato</label>
+          <label>Canal</label>
           <select [(ngModel)]="prospeccao.canal">
             <option value="">Selecione...</option>
             <option value="Telefone">Telefone</option>
@@ -511,34 +660,82 @@
             <option value="Visita Presencial">Visita Presencial</option>
           </select>
         </div>
+
         <div class="form-group">
-          <label>Responsável pela Prospecção</label>
+          <label>Responsável</label>
           <input type="text" [(ngModel)]="prospeccao.responsavel" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Observações / Histórico do Contato</label>
+          <label>Observações</label>
           <textarea rows="3" [(ngModel)]="prospeccao.observacoes"></textarea>
         </div>
       </div>
 
+      <!-- HISTÓRICO DE PROSPECÇÕES -->
+      <div *ngIf="mostrarHistorico" class="prospeccoes-historico">
+        <h4 class="historico-title">Histórico de Prospecções</h4>
+
+        <div
+          class="prospeccao-card"
+          *ngFor="let p of prospeccoes"
+          [class.active]="p.id === prospeccao.id"
+          (click)="selecionarProspeccao(p)"
+        >
+          <div class="card-header">
+            <span class="etapa" [ngClass]="p.etapa?.toLowerCase()">
+              {{ p.etapa }}
+            </span>
+
+            <span class="data">
+              {{ p.dataCriacao | date : "dd/MM/yyyy HH:mm" }}
+            </span>
+          </div>
+
+          <p class="observacao">
+            {{ p.observacoes || "Sem observações registradas." }}
+          </p>
+
+          <div class="card-footer">
+            <span class="canal">
+              <i class="fa-solid fa-comment-dots"></i>
+              {{ p.canal || "—" }}
+            </span>
+
+            <span class="responsavel">
+              <i class="fa-solid fa-user"></i>
+              {{ p.responsavel || "Não informado" }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AÇÕES -->
       <div class="form-footer">
         <button
           type="button"
           class="btn-project primary"
-          (click)="salvarProspeccao()"
+          (click)="openNovoProspModal(templateNovoProsp)"
+        >
+          <i class="fa-regular fa-floppy-disk"></i>
+          Nova Prospecção
+        </button>
+        <button
+          type="button"
+          class="btn-project primary"
+          (click)="atualizarProspeccao()"
         >
           <i class="fa-regular fa-floppy-disk"></i>
           Salvar Prospecção
         </button>
+
         <button
           type="button"
           class="btn-project ghost"
           (click)="limparProspeccao()"
         >
-          <i class="fa-solid fa-repeat"></i>
           Limpar
         </button>
       </div>
@@ -556,7 +753,7 @@
       <button
         type="button"
         class="btn-project ghost small-btn"
-        (click)="fecharNovoClienteModal()"
+        (click)="fecharModal()"
       >
         <i class="bi bi-x-lg"></i>
       </button>
@@ -572,9 +769,14 @@
         </div>
 
         <div class="form-row">
-          <div class="form-group small">
+          <div class="form-group">
             <label for="cpfCnpjModal">CPF/CNPJ</label>
             <input type="text" id="cpfCnpjModal" [(ngModel)]="cpfCnpj" />
+          </div>
+
+          <div class="form-group small">
+            <label for="cpfCnpjModal">DDD</label>
+            <input type="text" id="ddd" [(ngModel)]="ddd" />
           </div>
 
           <div class="form-group">
@@ -589,7 +791,7 @@
         </div>
 
         <div class="form-row">
-          <div class="form-group tipo-pessoa-group">
+          <div class="form-group small tipo-pessoa-group">
             <label>Tipo de Pessoa</label>
             <div class="pill-toggle">
               <button
@@ -608,6 +810,14 @@
               >
                 Jurídica
               </button>
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'outros'"
+                (click)="tipoPessoa = 'outros'"
+              >
+                Outros
+              </button>
             </div>
           </div>
         </div>
@@ -615,11 +825,7 @@
     </div>
 
     <div class="modal-footer form-footer">
-      <button
-        type="button"
-        class="btn-project ghost"
-        (click)="fecharNovoClienteModal()"
-      >
+      <button type="button" class="btn-project ghost" (click)="fecharModal()">
         Cancelar
       </button>
       <button
@@ -629,6 +835,116 @@
       >
         <i class="fa-regular fa-floppy-disk"></i>
         Salvar Cliente
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateNovoProsp>
+  <div class="modal-content modal-surface">
+    <div class="modal-header modal-surface-header">
+      <div>
+        <h2>Nova Prospecção</h2>
+        <p>Preencha os dados básicos para cadastrar uma nova prospecção.</p>
+      </div>
+      <button
+        type="button"
+        class="btn-project ghost small-btn"
+        (click)="fecharModal()"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="cliente-form">
+        <div class="form-row">
+          <div class="form-group large">
+            <label for="nomeModal">Contato da Prospecção</label>
+            <input type="text" id="nomeModal" [(ngModel)]="nome" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group small">
+            <label for="cpfCnpjModal">Prob (%)</label>
+            <input
+              type="text"
+              id="ddd"
+              [(ngModel)]="prospeccao.probabilidade"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="telefoneModal">Origem do Contato</label>
+            <input
+              type="text"
+              id="telefoneModal"
+              [(ngModel)]="prospeccao.origemContato"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="emailModal">Interesse</label>
+            <input
+              type="email"
+              id="emailModal"
+              [(ngModel)]="prospeccao.interessePrincipal"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="emailModal">Necessidade</label>
+          <input
+            type="email"
+            id="emailModal"
+            [(ngModel)]="prospeccao.necessidade"
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group small">
+            <label>Próximo Contato</label>
+            <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
+          </div>
+
+          <div class="form-group small">
+            <label>Canal</label>
+            <select [(ngModel)]="prospeccao.canal">
+              <option value="">Selecione...</option>
+              <option value="Telefone">Telefone</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="E-mail">E-mail</option>
+              <option value="Visita Presencial">Visita Presencial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Responsável</label>
+            <input type="text" [(ngModel)]="prospeccao.responsavel" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Observações</label>
+            <textarea rows="3" [(ngModel)]="prospeccao.observacoes"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer form-footer">
+      <button type="button" class="btn-project ghost" (click)="fecharModal()">
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn-project primary"
+        (click)="addNovaProspeccao()"
+      >
+        <i class="fa-solid fa-plus"></i>
+        Incluir Prospecção
       </button>
     </div>
   </div>

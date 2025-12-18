@@ -9,6 +9,8 @@ using HumanCRM_Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace HumanCRM_Api.Controllers
 {
@@ -23,54 +25,77 @@ namespace HumanCRM_Api.Controllers
         }
 
         //---------- GET -----------//
+
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult BuscarClientes(
-                            [FromQuery] int? id,
-                            [FromQuery] string? nome,
-                            [FromQuery] int cpfCnpj,
-                            [FromQuery] string? telefone)
+        public async Task<IActionResult> BuscarClientes(
+    [FromQuery] int? id,
+    [FromQuery] string? nome,
+    [FromQuery] string? cpfCnpj,
+    [FromQuery] string? telefone)
         {
-            var query = _context.Clientes.AsQueryable();
-
-            if(id == null &&
+            if (id == null &&
                 string.IsNullOrEmpty(nome) &&
-                cpfCnpj == null &&
+                string.IsNullOrEmpty(cpfCnpj) &&
                 string.IsNullOrEmpty(telefone))
             {
                 return BadRequest("Informe ao menos um filtro");
             }
 
-            query = query.Where(c => 
-                (id != null && c.Id == id) || 
-                (!string.IsNullOrEmpty(nome) && c.Nome.Contains(nome)) ||
-                (cpfCnpj == null && c.CpfCnpj == cpfCnpj) ||
-                (!string.IsNullOrEmpty(telefone) && c.Telefone.Contains(telefone))
+            var clientes = await _context.Clientes
+                .Where(c =>
+                    (id != null && c.Id == id) ||
+                    (!string.IsNullOrEmpty(nome) && c.Nome.Contains(nome)) ||
+                    (!string.IsNullOrEmpty(cpfCnpj) && c.CpfCnpj.Contains(cpfCnpj)) ||
+                    (!string.IsNullOrEmpty(telefone) && c.Telefone.Contains(telefone))
+                )
+                .Select(c => new ClienteDto
+                {
+                    Id = c.Id,
+                    Nome = c.Nome,
+                    CpfCnpj = c.CpfCnpj,
+                    RG = c.RG,
+                    Telefone = c.Telefone,
+                    TipoPessoa = c.TipoPessoa,
+                    Cep = c.Cep,
+                    Rua = c.Rua,
+                    Complemento = c.Complemento,
+                    Bairro = c.Bairro,
+                    Cidade = c.Cidade,
+                    Estado = c.Estado,
+                    RedeSocial = c.RedeSocial,
+                    DDD = c.DDD,
+                    Email = c.Email,
+                    Celular = c.Celular,
+                    ResponsavelContato = c.ResponsavelContato,
+                    OrigemContato = c.OrigemContato,
+                    Observacoes = c.Obs,
 
-                );
 
-            return Ok(query.ToList());
-        }
+                    Prospeccoes = c.Prospeccoes
+                        .OrderByDescending(p => p.DataCriacao)
+                        .Select(p => new ProspeccaoResponseDto
+                        {
+                            Id = p.Id,
+                            ClienteId = p.ClienteId,
+                            Etapa = p.Etapa,
+                            Probabilidade = (int)p.Probabilidade,
+                            Canal = p.Canal,
+                            Responsavel = p.Responsavel,
+                            DataCriacao = p.DataCriacao
+                        })
+                        .ToList()
+                })
+                .ToListAsync();
 
-        
-
-        [HttpGet("prospeccoes/{id}")]
-        public async Task<IActionResult> GetProspeccaoById(int id)
-        {
-            var prospeccao = _context.ProspeccoesClientes
-                .FirstOrDefault(p => p.Id == id);
-
-            if (prospeccao == null)
-                return NotFound();
-
-            return Ok(prospeccao);
+            return Ok(clientes);
         }
 
         //------------- POST -------------//
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> AddCliente([FromBody] AddClienteDto dto)
+        public async Task<IActionResult> AddCliente([FromBody] ClienteDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -82,6 +107,7 @@ namespace HumanCRM_Api.Controllers
                 Telefone = dto.Telefone,
                 Email = dto.Email,
                 TipoPessoa = dto.TipoPessoa,
+                DDD = dto.DDD,
 
                 // Campos extras da entidade preenchidos com default/null
                 Rua = string.Empty,
@@ -106,15 +132,16 @@ namespace HumanCRM_Api.Controllers
 
         [HttpPost("{clienteId}/prospeccoes")]
         public async Task<IActionResult> AddProspeccao(
-        int clienteId,
-        [FromBody] ProspeccaoClienteDto dto)
+    int clienteId,
+    [FromBody] ProspeccaoClienteDto dto)
         {
-            // 1) Verifica se o cliente existe
-            var cliente = await _context.Clientes.FindAsync(clienteId);
-            if (cliente == null)
+            // ✔ valida existência sem carregar entidade
+            var clienteExiste = await _context.Clientes
+                .AnyAsync(c => c.Id == clienteId);
+
+            if (!clienteExiste)
                 return NotFound($"Cliente com Id {clienteId} não encontrado.");
 
-            // 2) Cria a prospecção vinculada ao cliente
             var prospeccao = new ProspeccaoCliente
             {
                 ClienteId = clienteId,
@@ -127,16 +154,30 @@ namespace HumanCRM_Api.Controllers
                 Canal = dto.Canal,
                 Responsavel = dto.Responsavel,
                 Observacoes = dto.Observacoes,
-                DataCriacao = DateTime.Now
+                DataCriacao = DateTime.UtcNow
             };
 
-            _context.ProspeccoesClientes.Add(prospeccao); // nome do DbSet aqui
+            _context.ProspeccoesClientes.Add(prospeccao);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(
-                nameof(GetProspeccaoById),   // cria esse método se quiser
-                new { id = prospeccao.Id },
-                prospeccao);
+            var response = new ProspeccaoResponseDto
+            {
+                Id = prospeccao.Id,
+                ClienteId = prospeccao.ClienteId,
+                Etapa = prospeccao.Etapa,
+                ContatoProspeccao = prospeccao.ContatoProspeccao,
+                Probabilidade = (int)prospeccao.Probabilidade,
+                OrigemContato = prospeccao.OrigemContato,
+                InteressePrincipal = prospeccao.InteressePrincipal,
+                Necessidade = prospeccao.Necessidade,
+                DataProximoContato = prospeccao.DataProximoContato,
+                Canal = prospeccao.Canal,
+                Responsavel = prospeccao.Responsavel,
+                Observacoes = prospeccao.Observacoes,
+                DataCriacao = prospeccao.DataCriacao
+            };
+
+            return StatusCode(StatusCodes.Status201Created, response);
         }
 
         //---------------- UPDATE ------------------//
@@ -159,11 +200,20 @@ namespace HumanCRM_Api.Controllers
             clientesToUpdate.Numero = clientes.Numero;
             clientesToUpdate.Bairro = clientes.Bairro;
             clientesToUpdate.Cidade = clientes.Cidade;
+            clientesToUpdate.Estado = clientes.Estado;
             clientesToUpdate.Complemento = clientes.Complemento;
+            clientesToUpdate.RG = clientes.RG;
+            clientesToUpdate.DDD = clientes.DDD;
             clientesToUpdate.Telefone = clientes.Telefone;
             clientesToUpdate.Celular = clientes.Celular;
             clientesToUpdate.Email = clientes.Email;
             clientesToUpdate.RedeSocial = clientes.RedeSocial;
+            clientesToUpdate.RazaoSocial = clientes.RazaoSocial;
+            clientesToUpdate.IE = clientes.IE;
+            clientesToUpdate.IM = clientes.IM;
+            clientesToUpdate.DataContato = clientes.DataContato;
+            clientesToUpdate.DataCadastro = clientes.DataCadastro;
+            clientesToUpdate.DataFuncacao = clientes.DataFuncacao;
             clientesToUpdate.ResponsavelContato = clientes.ResponsavelContato;
             clientesToUpdate.OrigemContato = clientes.OrigemContato;
             clientesToUpdate.Obs = clientes.Obs;
@@ -172,25 +222,50 @@ namespace HumanCRM_Api.Controllers
             return NoContent();
         }
 
-        //------------- DELETE -------------//
 
-        [HttpDelete]
-        [AllowAnonymous]
-        public async Task<IActionResult> DeleteClienteById(int id)
+        [HttpPut("{clienteId}/prospeccoes/{prospeccaoId}")]
+        public async Task<IActionResult> UpdateProspeccao(
+    int clienteId,
+    int prospeccaoId,
+    [FromBody] ProspeccaoClienteDto dto)
         {
-            var client = _context.Clientes.FirstOrDefault(clients => clients.Id == id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-            _context.Clientes.Remove(client);
+            var prospeccao = await _context.ProspeccoesClientes
+                .FirstOrDefaultAsync(p =>
+                    p.Id == prospeccaoId &&
+                    p.ClienteId == clienteId);
+
+            if (prospeccao == null)
+                return NotFound("Prospecção não encontrada para este cliente.");
+
+            prospeccao.Etapa = dto.Etapa;
+            prospeccao.Probabilidade = dto.Probabilidade;
+            prospeccao.OrigemContato = dto.OrigemContato;
+            prospeccao.InteressePrincipal = dto.InteressePrincipal;
+            prospeccao.Necessidade = dto.Necessidade;
+            prospeccao.DataProximoContato = dto.DataProximoContato;
+            prospeccao.Canal = dto.Canal;
+            prospeccao.Responsavel = dto.Responsavel;
+            prospeccao.Observacoes = dto.Observacoes;
+            prospeccao.ContatoProspeccao = dto.ContatoProspeccao;
+
             await _context.SaveChangesAsync();
-            return NoContent();
+
+            return Ok(new ProspeccaoResponseDto
+            {
+                Id = prospeccao.Id,
+                ClienteId = prospeccao.ClienteId,
+                Etapa = prospeccao.Etapa,
+                Probabilidade = (int)prospeccao.Probabilidade,
+                OrigemContato = prospeccao.OrigemContato,
+                InteressePrincipal = prospeccao.InteressePrincipal,
+                Necessidade = prospeccao.Necessidade,
+                DataProximoContato = prospeccao.DataProximoContato,
+                Canal = prospeccao.Canal,
+                Responsavel = prospeccao.Responsavel,
+                Observacoes = prospeccao.Observacoes,
+                DataCriacao = prospeccao.DataCriacao
+            });
         }
 
-    }
-
-    public class ClienteCreateDto
-    {
     }
 }

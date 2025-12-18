@@ -3,6 +3,7 @@ using System;
 using HumanCRM_Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanCRM_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251218195349_AdicionarContatoProps")]
+    partial class AdicionarContatoProps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
@@ -39,8 +42,8 @@ namespace HumanCRM_Api.Migrations
                     b.Property<string>("Complemento")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CpfCnpj")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CpfCnpj")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("DDD")
                         .HasColumnType("INTEGER");
@@ -60,9 +63,6 @@ namespace HumanCRM_Api.Migrations
                     b.Property<string>("Estado")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EstadoCivil")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("IE")
                         .HasColumnType("INTEGER");
 
@@ -80,14 +80,11 @@ namespace HumanCRM_Api.Migrations
                     b.Property<string>("Obs")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OrgaoExpedidor")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("OrigemContato")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RG")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("RG")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("RazaoSocial")
                         .HasColumnType("TEXT");
@@ -100,9 +97,6 @@ namespace HumanCRM_Api.Migrations
 
                     b.Property<string>("Rua")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Sexo")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Telefone")
                         .HasColumnType("TEXT");
