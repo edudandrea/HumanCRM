@@ -11,7 +11,7 @@ export interface ProspeccaoCliente {
   origemContato: string;
   interessePrincipal: string;
   necessidade: string;
-  dataProximoContato?: string;
+  dataProximoContato?: string | null;
   canal: string;
   responsavel: string;
   observacoes?: string;
@@ -26,11 +26,7 @@ export class ProspeccaoService {
 
   constructor(private http: HttpClient) {}
 
-  getProspeccao(clienteId: number): Observable<any[]> {
-    return this.http.get<ProspeccaoCliente[]>(
-      `${this.apiUrl}/${clienteId}/prospeccoes`
-    );
-  }  
+  
 
   addProspeccao(
     clienteId: number,

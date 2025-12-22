@@ -33,6 +33,8 @@ export interface CadastroClientes {
   sexo: number;
   estadoCivil: number;
   razaoSocial: string;
+  necessidade: string;
+  dataProximoContato: string;
 
   prospeccoes: ProspeccaoCliente[];
 }

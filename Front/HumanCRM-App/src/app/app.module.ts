@@ -10,7 +10,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CadastroClienteComponent } from 'CadastroCliente/CadastroCliente.component';
+
 import { SidebarComponent } from 'Sidebar/Sidebar.component';
 import { DashboardComponent } from 'Dashboard/Dashboard.component';
 import { UsersComponentComponent } from 'Users/Users.component';
@@ -19,6 +19,7 @@ import { LoginComponent } from 'Login/Login.component';
 import { LayoutComponent } from 'Layout/Layout.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CadastroClienteComponent } from 'CadastroCliente/CadastroCliente.component';
 
 
 @NgModule({ declarations: [	

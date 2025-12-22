@@ -152,6 +152,17 @@ button:disabled {
   box-shadow: 0 16px 35px rgba(34, 193, 195, 0.4);
 }
 
+.btn-project.new {
+  background: linear-gradient(135deg, #00cc6d, #22c1c3);
+  color: #ffffff;
+  box-shadow: 0 12px 25px rgba(34, 193, 195, 0.35);
+}
+
+.btn-project.new:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 35px rgba(34, 193, 195, 0.4);
+}
+
 .btn-project.cancel {
   background: linear-gradient(135deg, #f35e5e, #f07556);
   color: #ffffff;

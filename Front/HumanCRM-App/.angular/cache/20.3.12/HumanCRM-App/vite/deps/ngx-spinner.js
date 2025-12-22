@@ -1,15 +1,15 @@
 import "./chunk-R6E3QANM.js";
 import {
+  DomSanitizer
+} from "./chunk-TLAY2K4Y.js";
+import "./chunk-7EWGFZU2.js";
+import {
   animate,
   state,
   style,
   transition,
   trigger
 } from "./chunk-5WHTYC2Q.js";
-import {
-  DomSanitizer
-} from "./chunk-TLAY2K4Y.js";
-import "./chunk-7EWGFZU2.js";
 import "./chunk-CRO5GQOK.js";
 import {
   NgForOf,

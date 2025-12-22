@@ -8,6 +8,7 @@ import {
   ProspeccaoService,
 } from 'Services/Prospeccao.service';
 
+
 @Component({
   selector: 'app-CadastroCliente',
   templateUrl: './CadastroCliente.component.html',
@@ -15,78 +16,63 @@ import {
   standalone: false,
 })
 export class CadastroClienteComponent implements OnInit {
-  bsModalRef?: BsModalRef;
-  activeTab: number = 1;
-  cliente: CadastroClientes[] = [];
-  clientesFiltrados: CadastroClientes[] = [];
-  selectedCliente?: CadastroClientes;
-  subTabActive: number = 1;
-  isCNPJ: boolean = false;
-  id: number = 1;
-  tipoPessoa: string = 'Física';
-  nome: string = '';
-  cpfCnpj: number = 1;
-  cep: number = 1;
-  rua: string = '';
-  numero: number = 1;
-  bairro: string = '';
-  cidade: string = '';
-  estado: string = '';
-  complemento: string = '';
-  telefone: string = '';
-  celular: number = 1;
-  email: string = '';
-  redeSocial: string = '';
-  responsavelContato: string = '';
-  origemContato: string = '';
-  obs: string = '';
-  idPesquisa: number | null = null;
-  idCliente: number | null = null;
-  ddd: number = 1;
-  rg: number = 1;
-  razaoSocial: string = '';
-  IE: number = 1;
-  IM: number = 1;
-  dataFuncacao: string = '';
-  dataContato: string = '';
-  orgaoExpedidor: string = '';
-  sexo: number = 1;
-  estadoCivil: number = 1;
+  // ---------- UI ----------
+  activeTab = 1;
+  subTabActive = 1;
+  mostrarHistorico = false;
+  podeSalvar = false;
 
   modalRef?: BsModalRef;
 
+  // ---------- Cliente ----------
+  cliente: CadastroClientes[] = [];
+  selectedCliente?: CadastroClientes;
+
+  idCliente: number | null = null;
+  nome = '';
+  cpfCnpj: number | any = '';
+  rg: number | any = '';
+  ddd: number | any = '';
+  telefone = '';
+  celular: number | any = '';
+  email = '';
+  tipoPessoa = 'Física';
+
+  rua = '';
+  complemento = '';
+  numero: number | any = '';
+  cep: number | any = '';
+  bairro = '';
+  cidade = '';
+  estado = '';
+
+  responsavelContato = '';
+  origemContato = '';
+  redeSocial = '';
+  obs = '';
+  razaoSocial = '';
+  IE: number | any = '';
+  IM: number | any = '';
+  dataFundacao = '';
+  dataProximoContato = '';
+
+  orgaoExpedidor = '';
+  sexo: number | any = '';
+  estadoCivil: number | any = '';
+  dataContato = '';
+
+  // ---------- Prospecção ----------
+  prospeccoes: ProspeccaoCliente[] = [];
+
+  prospeccao: Partial<ProspeccaoCliente> = this.criarProspeccaoVazia();
+
+  // ---------- Filtros ----------
   filtroClientes = {
     id: '',
     nome: '',
     cpfCnpj: '',
     telefone: '',
   };
-
-  filtroProspeccao = {
-    id: '',
-    nome: '',
-    documento: '',
-    cidade: '',
-  };
-
-  clientesProspeccao: any[] = [];
-  prospeccoes: ProspeccaoCliente[] = [];
-  mostrarHistorico = false;
-
-  prospeccao: Partial<ProspeccaoCliente> = {
-    id: 1,
-    etapa: '',
-    probabilidade: 1,
-    origemContato: '',
-    interessePrincipal: '',
-    necessidade: '',
-    dataProximoContato: '',
-    canal: '',
-    responsavel: '',
-    observacoes: '',
-  };
-
-  podeSalvar: boolean = false;
 
   constructor(
     private toastr: ToastrService,
@@ -96,123 +82,80 @@ export class CadastroClienteComponent implements OnInit {
     private modalService: BsModalService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  setTipoPessoa(tipo: string): void {
-    this.tipoPessoa = tipo;
+  // =====================================================
+  // 🔹 HELPERS (ESSENCIAIS)
+  // =====================================================
+
+  /** Cria uma prospecção vazia (formulário) */
+  private criarProspeccaoVazia(): Partial<ProspeccaoCliente> {
+    return {
+      etapa: '',
+      probabilidade: 0,
+      origemContato: '',
+      interessePrincipal: '',
+      necessidade: '',
+      dataProximoContato: null,
+      canal: '',
+      responsavel: '',
+      observacoes: '',
+    };
   }
 
-  setActiveTab(tabNumber: number) {
-    this.activeTab = tabNumber;
-    if (tabNumber === 3 && this.selectedCliente) {
-      this.definirClienteAtual(this.selectedCliente);
-    }
+  /** Normaliza data ISO → yyyy-MM-dd (para input type="date") */
+  private normalizarProspeccao(
+    p: ProspeccaoCliente
+  ): Partial<ProspeccaoCliente> {
+    return {
+      ...p,
+      dataProximoContato: p.dataProximoContato
+        ? new Date(p.dataProximoContato).toISOString().substring(0, 10)
+        : null,
+    };
   }
 
-  setActiveSubTab(subTabNumber: number) {
-    this.subTabActive = subTabNumber;
+  /** Prepara payload para backend (yyyy-MM-dd → ISO) */
+  private prepararPayloadProspeccao() {
+    return {
+      ...this.prospeccao,
+      dataProximoContato: this.prospeccao.dataProximoContato
+        ? new Date(
+            this.prospeccao.dataProximoContato + 'T00:00:00'
+          ).toISOString()
+        : null,
+    };
   }
-  //--------- CLIENTES -----------//
+
+  // =====================================================
+  // 🔹 CLIENTES
+  // =====================================================
+
   pesquisarClientes(filtro: any): void {
     this.spinner.show();
+
     this.clienteService.pesquisarClientes(filtro).subscribe({
       next: (res) => {
         this.spinner.hide();
 
-        if (!res || res.length === 0) {
-          this.toastr.info('Nenhum cliente encontrado.', 'Pesquisa');
+        if (!res?.length) {
+          this.toastr.info('Nenhum cliente encontrado.');
           return;
         }
 
-        this.cliente = res;
-        // por exemplo seleciona o primeiro resultado e preenche o formulário
-        this.selectedCliente = res[0];
-        this.definirClienteAtual(res[0]);
-        this.prospeccoes = res[0].prospeccoes ?? [];
-        this.prospeccao = this.prospeccoes.length
-          ? { ...this.prospeccoes[0] }
-          : this.novaProspeccao();
-
-        // popular campos do form com o cliente encontrado
-        this.popularCampos(this.selectedCliente);
-
-        // muda para aba 2 (onde está o formulário) — isso também ativa a animação
+        this.carregarCliente(res[0]);
         this.activeTab = 2;
       },
-      error: (err) => {
+      error: () => {
         this.spinner.hide();
-        console.error(err);
-        this.toastr.error('Erro ao buscar clientes.', 'Erro');
+        this.toastr.error('Erro ao buscar clientes');
       },
     });
-  }
-  onPesquisarClick(): void {
-    const filtro: any = {};
-
-    if (this.filtroClientes.id) filtro.id = Number(this.filtroClientes.id);
-
-    if (this.filtroClientes.nome) filtro.nome = this.filtroClientes.nome;
-
-    if (this.filtroClientes.cpfCnpj)
-      filtro.cpfCnpj = this.filtroClientes.cpfCnpj;
-
-    if (this.filtroClientes.telefone)
-      filtro.telefone = this.filtroClientes.telefone;
-
-    console.log('Filtro enviado corretamente:', filtro);
-
-    this.pesquisarClientes(filtro);
-  }
-
-  popularCampos(c: CadastroClientes) {
-    if (!c) return;
-    this.idCliente = c.id;
-    this.nome = c.nome ?? '';
-    this.cpfCnpj = c.cpfCnpj ?? '';
-    this.rg = c.rg;
-    this.ddd = c.ddd;
-    this.telefone = c.telefone ?? '';
-    this.celular = c.celular;
-    this.rua = c.rua ?? '';
-    this.cidade = c.cidade ?? '';
-    this.estado = c.estado ?? '';
-    this.numero = c.numero;
-    this.bairro = c.bairro ?? '';
-    this.email = c.email ?? '';
-    this.redeSocial = c.redeSocial ?? '';
-    this.complemento = c.complemento ?? '';
-    this.responsavelContato = c.responsavelContato ?? '';
-    this.origemContato = c.origemContato ?? '';
-    this.obs = c.obs ?? '';
-    this.IE = c.IE;
-    this.IM = c.IM;
-    this.dataContato = c.dataContato ?? '';
-    this.razaoSocial = c.razaoSocial ?? '';
-    this.orgaoExpedidor = c.orgaoExpedidor ?? '';
-    this.sexo = c.sexo;
-    this.estadoCivil = c.estadoCivil;
-
-    // preencha outros campos do formulário conforme seu model...
-  }
-
-  openNovoClienteModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, {
-      class: 'modal-lg modal-dialog-centered', // modal grande, centralizado
-    });
-  }
-
-  openNovoProspModal(templateProsp: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(templateProsp, {
-      class: 'modal-lg modal-dialog-centered', // modal grande, centralizado
-    });
-  }
-
-  fecharModal() {
-    this.modalRef?.hide();
   }
 
   salvarNovoCliente() {
     this.spinner.show();
+
     const cliente = {
       nome: this.nome,
       cpfCnpj: this.cpfCnpj,
@@ -222,33 +165,48 @@ export class CadastroClienteComponent implements OnInit {
       ddd: this.ddd,
     };
 
+    console.group('📤 NOVO CLIENTE');
+    console.log(JSON.stringify(cliente, null, 2));
+    console.groupEnd();
+
     this.clienteService.novoCliente(cliente).subscribe({
       next: (res) => {
         this.spinner.hide();
         this.toastr.success('Cliente cadastrado!', 'Sucesso');
+
+        // 🔥 já carrega o cliente recém-criado
+        this.carregarCliente(res);
+
+        this.activeTab = 2;
         this.fecharModal();
       },
       error: (err) => {
         this.spinner.hide();
+        console.error(err);
         this.toastr.error('Erro ao salvar cliente', 'Erro');
-        this.fecharModal();
       },
     });
   }
 
-  salvarCliente() {
-    if (!this.podeSalvar) {
+  atualizarCliente() {
+    if (!this.idCliente) {
+      this.toastr.warning('Cliente não selecionado.', 'Atenção');
       return;
     }
-    this.spinner.show();
-    const cliente = {
+
+    if (!this.podeSalvar) return;
+
+    const payload = {
+      id: this.idCliente,
       nome: this.nome,
       cpfCnpj: this.cpfCnpj,
       rg: this.rg,
       telefone: this.telefone,
+      celular: this.celular,
       email: this.email,
       tipoPessoa: this.tipoPessoa,
       rua: this.rua,
+      numero: this.numero,
       complemento: this.complemento,
       cep: this.cep,
       bairro: this.bairro,
@@ -260,155 +218,172 @@ export class CadastroClienteComponent implements OnInit {
       redeSocial: this.redeSocial,
       obs: this.obs,
       razaoSocial: this.razaoSocial,
-      sexo:this.sexo,
-      estadoCivil:this.estadoCivil,
-      orgaoExpedidor:this.orgaoExpedidor,
+      sexo: this.sexo,
+      estadoCivil: this.estadoCivil,
+      orgaoExpedidor: this.orgaoExpedidor,
     };
-    console.log('Filtro enviado corretamente:', cliente);
 
-    this.clienteService.salvarCliente(cliente).subscribe({
+    console.group('📤 ATUALIZAR CLIENTE');
+    console.log(JSON.stringify(payload, null, 2));
+    console.groupEnd();
+
+    this.spinner.show();
+
+    this.clienteService.salvarCliente(payload).subscribe({
       next: (res) => {
         this.spinner.hide();
-        this.toastr.success('Cliente cadastrado!', 'Sucesso');
+        this.toastr.success('Cliente atualizado com sucesso!', 'Sucesso');
+
+        // 🔥 mantém estado atualizado
+        this.carregarCliente(res);
         this.podeSalvar = false;
       },
       error: (err) => {
         this.spinner.hide();
-        this.toastr.error('Erro ao salvar cliente', 'Erro');
-        this.podeSalvar = false;
+        console.error(err);
+        this.toastr.error('Erro ao atualizar cliente', 'Erro');
       },
     });
   }
 
-  private definirClienteAtual(c: CadastroClientes) {
+  setClienteAtual(cliente: CadastroClientes) {
+    if (!cliente) return;
+
+    this.selectedCliente = cliente;
+
+    // dados principais
+    this.idCliente = cliente.id;
+    this.nome = cliente.nome;
+    this.cpfCnpj = cliente.cpfCnpj;
+
+    // histórico de prospecções
+    this.prospeccoes = cliente.prospeccoes ?? [];
+    this.mostrarHistorico = false;
+
+    // carrega a prospecção mais recente no formulário
+    if (this.prospeccoes.length > 0) {
+      this.prospeccao = this.normalizarProspeccao(this.prospeccoes[0]);
+    } else {
+      this.iniciarProspeccao();
+    }
+  }
+
+  onPesquisarClick(): void {
+    const filtro: any = {};
+    if (this.filtroClientes.id) filtro.id = Number(this.filtroClientes.id);
+    if (this.filtroClientes.nome) filtro.nome = this.filtroClientes.nome;
+    if (this.filtroClientes.cpfCnpj)
+      filtro.cpfCnpj = this.filtroClientes.cpfCnpj;
+    if (this.filtroClientes.telefone)
+      filtro.telefone = this.filtroClientes.telefone;
+
+    this.pesquisarClientes(filtro);
+  }
+
+  private carregarCliente(c: CadastroClientes) {
     this.selectedCliente = c;
-
     this.idCliente = c.id;
-    this.nome = c.nome;
-    this.cpfCnpj = c.cpfCnpj;
 
+    // dados básicos
+    this.nome = c.nome ?? '';
+    this.cpfCnpj = c.cpfCnpj ?? '';
+    this.rg = c.rg ?? '';
+    this.ddd = c.ddd ?? '';
+    this.telefone = c.telefone ?? '';
+    this.celular = c.celular ?? '';
+    this.email = c.email ?? '';
+    this.tipoPessoa = c.tipoPessoa ?? 'Física';
+
+    // endereço
+    this.rua = c.rua ?? '';
+    this.complemento = c.complemento ?? '';
+    this.cep = c.cep ?? '';
+    this.bairro = c.bairro ?? '';
+    this.cidade = c.cidade ?? '';
+    this.estado = c.estado ?? '';
+
+    // outros
+    this.responsavelContato = c.responsavelContato ?? '';
+    this.origemContato = c.origemContato ?? '';
+    this.redeSocial = c.redeSocial ?? '';
+    this.obs = c.obs ?? '';
+    this.razaoSocial = c.razaoSocial ?? '';
+    this.IE = c.IE ?? '';
+    this.IM = c.IM ?? '';
+
+    // prospecções
     this.prospeccoes = c.prospeccoes ?? [];
     this.mostrarHistorico = false;
 
     this.prospeccao = this.prospeccoes.length
-      ? { ...this.prospeccoes[0] }
-      : this.novaProspeccao();
-  }
-  //-------------- PROSPECÇÃO -----------------//
-  novaProspeccao(): ProspeccaoCliente {
-    return {
-      id: 0,
-      clienteId: this.selectedCliente!.id,
-      etapa: '',
-      probabilidade: 0,
-      canal: '',
-      responsavel: '',
-      origemContato: '',
-      interessePrincipal: '',
-      necessidade: '',
-      dataCriacao: new Date().toISOString(),
-    };
+      ? this.normalizarProspeccao(this.prospeccoes[0])
+      : this.criarProspeccaoVazia();
   }
 
-  selecionarProspeccao(p: ProspeccaoCliente) {
-    this.prospeccao = { ...p }; // clone para não editar direto
-    this.mostrarHistorico = false;
+  // =====================================================
+  // 🔹 PROSPECÇÕES
+  // =====================================================
+
+  iniciarProspeccao() {
+    this.prospeccao = this.criarProspeccaoVazia();
   }
+
+  selecionarProspeccao(p: ProspeccaoCliente) {    
+    this.prospeccao = this.normalizarProspeccao(p);
+    this.mostrarHistorico = false;
+    console.log('📅 DATA NO FORM:', this.prospeccao.dataProximoContato);
+  }
+
+  
 
   addNovaProspeccao() {
     if (!this.idCliente) return;
 
+    const payload = this.prepararPayloadProspeccao();
+
     this.spinner.show();
+    this.prospeccaoService.addProspeccao(this.idCliente, payload).subscribe({
+      next: (res) => {
+        this.spinner.hide();
+        this.toastr.success('Prospecção criada!');
 
-    this.prospeccaoService
-      .addProspeccao(this.idCliente, this.prospeccao)
-      .subscribe({
-        next: (res) => {
-          this.spinner.hide();
-          this.toastr.success('Prospecção criada!', 'Sucesso');
+        this.prospeccoes.unshift(res);
+        this.prospeccao = this.normalizarProspeccao(res);
+        this.mostrarHistorico = false;
 
-          // adiciona no topo do histórico
-          this.prospeccoes.unshift(res);
-
-          // seleciona a nova prospecção
-          this.prospeccao = { ...res };
-          this.mostrarHistorico = false;
-        },
-        error: () => {
-          this.spinner.hide();
-          this.toastr.error('Erro ao criar prospecção', 'Erro');
-        },
-      });
+        this.fecharModal();
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error('Erro ao criar prospecção');
+      },
+    });
   }
 
   atualizarProspeccao() {
     if (!this.idCliente || !this.prospeccao.id) return;
 
-    const payload = {
-      etapa: this.prospeccao.etapa,
-      probabilidade: this.prospeccao.probabilidade,
-      origemContato: this.prospeccao.origemContato,
-      interessePrincipal: this.prospeccao.interessePrincipal,
-      necessidade: this.prospeccao.necessidade,
-      dataProximoContato: this.prospeccao.dataProximoContato,
-      canal: this.prospeccao.canal,
-      responsavel: this.prospeccao.responsavel,
-      observacoes: this.prospeccao.observacoes,
-    };
-
-    console.group('📤 PAYLOAD ENVIADO PARA O BACKEND');
-    console.log('clienteId:', this.idCliente);
-    console.log('prospeccaoId:', this.prospeccao.id);
-    console.log('payload:', JSON.stringify(payload, null, 2));
-    console.groupEnd();
+    const payload = this.prepararPayloadProspeccao();
 
     this.spinner.show();
-
     this.prospeccaoService
       .atualizarProspeccao(this.idCliente, this.prospeccao.id, payload)
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.spinner.hide();
-          this.toastr.success('Prospecção atualizada!', 'Sucesso');
-          this.carregarProspeccoes();
+          this.toastr.success('Prospecção atualizada!');
         },
-        error: (err) => {
+        error: () => {
           this.spinner.hide();
-          console.error('❌ ERRO BACKEND:', err);
-          this.toastr.error('Erro ao atualizar prospecção', 'Erro');
+          this.toastr.error('Erro ao atualizar prospecção');
         },
       });
   }
 
-  carregarProspeccoes() {
-    this.prospeccaoService
-      .getProspeccao(this.id)
-      .subscribe((res) => (this.prospeccoes = res));
-  }
-
-  limparProspeccao() {}
-
-  selecionarClienteProspeccao(c: CadastroClientes) {
-    this.idCliente = c.id;
-    this.nome = c.nome;
-
-    this.prospeccoes = c.prospeccoes ?? [];
-    this.mostrarHistorico = false;
-
-    // carrega a prospecção mais recente no formulário
-    if (this.prospeccoes.length > 0) {
-      this.prospeccao = { ...this.prospeccoes[0] };
-    } else {
-      this.prospeccao = this.novaProspeccao();
-    }
-  }
-
   toggleHistorico() {
-    // se vai abrir o histórico, recarrega do backend
     if (!this.mostrarHistorico) {
       this.recarregarProspecoes();
     }
-
     this.mostrarHistorico = !this.mostrarHistorico;
   }
 
@@ -416,38 +391,45 @@ export class CadastroClienteComponent implements OnInit {
     if (!this.idCliente) return;
 
     this.spinner.show();
-
     this.clienteService.pesquisarClientes({ id: this.idCliente }).subscribe({
       next: (res) => {
         this.spinner.hide();
+        if (!res?.length) return;
 
-        if (!res || !res.length) return;
-
-        const cliente = res[0];
-
-        // 🔥 substitui o array inteiro (remove cache)
-        this.prospeccoes = [...(cliente.prospeccoes ?? [])];
-
-        // opcional: ordena por data (mais recente primeiro)
-        this.prospeccoes.sort((a, b) => {
-          if (!a.dataCriacao || !b.dataCriacao) return 0;
-
-          return (
-            new Date(b.dataCriacao).getTime() -
-            new Date(a.dataCriacao).getTime()
-          );
-        });
+        this.prospeccoes = [...(res[0].prospeccoes ?? [])];
       },
       error: () => {
         this.spinner.hide();
-        this.toastr.error('Erro ao carregar histórico de prospecções', 'Erro');
+        this.toastr.error('Erro ao carregar histórico');
       },
     });
   }
 
-  pesquisarClientesProspeccao() {}
+  // =====================================================
+  // 🔹 MODAL
+  // =====================================================
 
-  //---------- BOTÕES ------------//
+  openNovoClienteModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {
+      class: 'modal-lg modal-dialog-centered',
+    });
+  }
+
+  openNovoProspModal(template: TemplateRef<any>) {
+  this.prospeccao = this.criarProspeccaoVazia();
+  this.modalRef = this.modalService.show(template, {
+    class: 'modal-lg modal-dialog-centered',
+  });
+}
+
+
+  fecharModal() {
+    this.modalRef?.hide();
+  }
+
+  // =====================================================
+  // 🔹 BOTÕES
+  // =====================================================
 
   alterar() {
     this.podeSalvar = true;
@@ -455,5 +437,19 @@ export class CadastroClienteComponent implements OnInit {
 
   cancelar() {
     this.podeSalvar = false;
+  }
+
+  // =====================================================
+  // 🔹 SUBTABS
+  // =====================================================
+
+  setActiveTab(tabNumber: number) {
+    this.activeTab = tabNumber;
+    if (tabNumber === 3 && this.selectedCliente) {
+      this.setClienteAtual(this.selectedCliente);
+    }
+  }
+  setActiveSubTab(subTabNumber: number) {
+    this.subTabActive = subTabNumber;
   }
 }

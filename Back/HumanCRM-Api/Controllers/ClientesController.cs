@@ -82,7 +82,8 @@ namespace HumanCRM_Api.Controllers
                             Probabilidade = (int)p.Probabilidade,
                             Canal = p.Canal,
                             Responsavel = p.Responsavel,
-                            DataCriacao = p.DataCriacao
+                            DataCriacao = p.DataCriacao,
+                            DataProximoContato = p.DataProximoContato,
                         })
                         .ToList()
                 })

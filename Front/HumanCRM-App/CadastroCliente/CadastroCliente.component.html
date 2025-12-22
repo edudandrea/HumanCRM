@@ -103,8 +103,6 @@
   </div>
 
   <!-- TAB 2 - Cadastro -->
-
-  <!-- TAB 2 - Cadastro -->
   <div
     class="surface-card"
     *ngIf="activeTab === 2"
@@ -269,7 +267,7 @@
         <div class="form-row">
           <div class="form-group small">
             <label>Data Cadastro</label>
-            <input type="text" />
+            <input type="date" />
           </div>
           <div class="form-group small">
             <label>DDD</label>
@@ -456,7 +454,7 @@
           <div class="form-row">
             <div class="form-group small">
               <label>Data da Fundação</label>
-              <input type="text" />
+              <input type="date" [(ngModel)]="dataFundacao" />
             </div>
             <div class="form-group small">
               <label>Inscrição Estadual</label>
@@ -510,7 +508,7 @@
       <button
         type="button"
         class="btn-project primary"
-        (click)="salvarCliente()"
+        (click)="atualizarCliente()"
         [disabled]="!podeSalvar"
       >
         <i class="fa-regular fa-floppy-disk"></i>
@@ -568,7 +566,7 @@
     <!-- FORMULÁRIO DE PROSPECÇÃO -->
     <div class="surface-subcard">
       <!-- BOTÃO DO HISTÓRICO (AQUI É O PONTO CRÍTICO) -->
-      <div class="form-row justify-end" *ngIf="prospeccoes?.length">
+      <div class="form-row justify-end" *ngIf="prospeccoes.length">
         <button
           type="button"
           class="btn-historico"
@@ -647,7 +645,11 @@
       <div class="form-row">
         <div class="form-group small">
           <label>Próximo Contato</label>
-          <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
+          <input
+            type="date"
+            name="dataProximoContato"
+            [(ngModel)]="prospeccao.dataProximoContato"
+          />
         </div>
 
         <div class="form-group small">
@@ -685,7 +687,7 @@
           (click)="selecionarProspeccao(p)"
         >
           <div class="card-header">
-            <span class="etapa" [ngClass]="p.etapa?.toLowerCase()">
+            <span class="etapa" [ngClass]="p.etapa.toLowerCase()">
               {{ p.etapa }}
             </span>
 
@@ -724,19 +726,11 @@
         </button>
         <button
           type="button"
-          class="btn-project primary"
+          class="btn-project new"
           (click)="atualizarProspeccao()"
         >
           <i class="fa-regular fa-floppy-disk"></i>
           Salvar Prospecção
-        </button>
-
-        <button
-          type="button"
-          class="btn-project ghost"
-          (click)="limparProspeccao()"
-        >
-          Limpar
         </button>
       </div>
     </div>
@@ -830,7 +824,7 @@
       </button>
       <button
         type="button"
-        class="btn-project primary"
+        class="btn-project new"
         (click)="salvarNovoCliente()"
       >
         <i class="fa-regular fa-floppy-disk"></i>
@@ -940,7 +934,7 @@
       </button>
       <button
         type="button"
-        class="btn-project primary"
+        class="btn-project new"
         (click)="addNovaProspeccao()"
       >
         <i class="fa-solid fa-plus"></i>
@@ -949,3 +943,4 @@
     </div>
   </div>
 </ng-template>
+
