@@ -49,7 +49,7 @@ export class CadastroClienteComponent implements OnInit {
   responsavelContato = '';
   origemContato = '';
   redeSocial = '';
-  obs = '';
+  observacoes = '';
   razaoSocial = '';
   IE: number | any = '';
   IM: number | any = '';
@@ -216,7 +216,7 @@ export class CadastroClienteComponent implements OnInit {
       responsavelContato: this.responsavelContato,
       origemContato: this.origemContato,
       redeSocial: this.redeSocial,
-      obs: this.obs,
+      observacoes: this.observacoes,
       razaoSocial: this.razaoSocial,
       sexo: this.sexo,
       estadoCivil: this.estadoCivil,
@@ -293,7 +293,7 @@ export class CadastroClienteComponent implements OnInit {
     this.celular = c.celular ?? '';
     this.email = c.email ?? '';
     this.tipoPessoa = c.tipoPessoa ?? 'Física';
-
+    
     // endereço
     this.rua = c.rua ?? '';
     this.complemento = c.complemento ?? '';
@@ -306,7 +306,7 @@ export class CadastroClienteComponent implements OnInit {
     this.responsavelContato = c.responsavelContato ?? '';
     this.origemContato = c.origemContato ?? '';
     this.redeSocial = c.redeSocial ?? '';
-    this.obs = c.obs ?? '';
+    this.observacoes = c.observacoes ?? '';
     this.razaoSocial = c.razaoSocial ?? '';
     this.IE = c.IE ?? '';
     this.IM = c.IM ?? '';

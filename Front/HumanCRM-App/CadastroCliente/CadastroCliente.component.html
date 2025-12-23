@@ -208,6 +208,16 @@
               [class.readonly-field]="!podeSalvar"
             />
           </div>
+          <div class="form-group small">
+            <label>Numero</label>
+            <input
+              type="text"
+              id="numero"
+              [(ngModel)]="numero"
+              [readonly]="!podeSalvar"
+              [class.readonly-field]="!podeSalvar"
+            />
+          </div>
           <div class="form-group">
             <label>Complemento</label>
             <input
@@ -355,7 +365,7 @@
             <input
               type="text"
               id="observacoes"
-              [(ngModel)]="obs"
+              [(ngModel)]="observacoes"
               [readonly]="!podeSalvar"
               [class.readonly-field]="!podeSalvar"
             />
@@ -403,11 +413,17 @@
             </div>
             <div class="form-group small">
               <label>Sexo</label>
-              <input
-                type="text"
-                [readonly]="!podeSalvar"
+
+              <select
+                [(ngModel)]="sexo"
+                [disabled]="!podeSalvar"
                 [class.readonly-field]="!podeSalvar"
-              />
+              >
+                <option [ngValue]="0">Prefiro não informar</option>
+                <option [ngValue]="1">Masculino</option>
+                <option [ngValue]="2">Feminino</option>
+                <option [ngValue]="3">Não binário</option>
+              </select>
             </div>
             <div class="form-group small">
               <label>Data de Nascimento</label>
@@ -943,4 +959,3 @@
     </div>
   </div>
 </ng-template>
-

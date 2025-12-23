@@ -23,7 +23,7 @@ export interface CadastroClientes {
   email: string;
   redeSocial: string;
   origemContato: string;
-  obs: string;
+  observacoes: string;
   responsavelContato: string;
   IE: number,
   IM: number,
@@ -34,7 +34,7 @@ export interface CadastroClientes {
   estadoCivil: number;
   razaoSocial: string;
   necessidade: string;
-  dataProximoContato: string;
+  dataProximoContato: string;  
 
   prospeccoes: ProspeccaoCliente[];
 }

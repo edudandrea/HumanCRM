@@ -84,6 +84,10 @@ namespace HumanCRM_Api.Controllers
                             Responsavel = p.Responsavel,
                             DataCriacao = p.DataCriacao,
                             DataProximoContato = p.DataProximoContato,
+                            Necessidade = p.Necessidade,
+                            InteressePrincipal = p.InteressePrincipal,
+                            OrigemContato  = p.OrigemContato,
+                            Observacoes = p.Observacoes
                         })
                         .ToList()
                 })
