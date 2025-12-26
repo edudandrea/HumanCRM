@@ -55,6 +55,7 @@ export class CadastroClienteComponent implements OnInit {
   IM: number | any = '';
   dataFundacao = '';
   dataProximoContato = '';
+  dataNascimento = '';
 
   orgaoExpedidor = '';
   sexo: number | any = '';
@@ -221,6 +222,7 @@ export class CadastroClienteComponent implements OnInit {
       sexo: this.sexo,
       estadoCivil: this.estadoCivil,
       orgaoExpedidor: this.orgaoExpedidor,
+      dataNascimento:this.dataNascimento,
     };
 
     console.group('📤 ATUALIZAR CLIENTE');
@@ -293,10 +295,15 @@ export class CadastroClienteComponent implements OnInit {
     this.celular = c.celular ?? '';
     this.email = c.email ?? '';
     this.tipoPessoa = c.tipoPessoa ?? 'Física';
+    this.sexo = c.sexo ?? '';
+    this.estadoCivil = c.estadoCivil ?? '';
+    this.dataNascimento = c.dataNascimento ?? '';
+    this.orgaoExpedidor = c.orgaoExpedidor
     
     // endereço
     this.rua = c.rua ?? '';
     this.complemento = c.complemento ?? '';
+    this.numero = c.numero ?? '';
     this.cep = c.cep ?? '';
     this.bairro = c.bairro ?? '';
     this.cidade = c.cidade ?? '';
@@ -310,6 +317,7 @@ export class CadastroClienteComponent implements OnInit {
     this.razaoSocial = c.razaoSocial ?? '';
     this.IE = c.IE ?? '';
     this.IM = c.IM ?? '';
+    this.orgaoExpedidor = c.orgaoExpedidor ?? '';
 
     // prospecções
     this.prospeccoes = c.prospeccoes ?? [];

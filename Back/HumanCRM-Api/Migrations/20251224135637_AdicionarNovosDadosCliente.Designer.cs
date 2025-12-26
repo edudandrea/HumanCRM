@@ -3,6 +3,7 @@ using System;
 using HumanCRM_Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanCRM_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251224135637_AdicionarNovosDadosCliente")]
+    partial class AdicionarNovosDadosCliente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");
@@ -120,40 +123,6 @@ namespace HumanCRM_Api.Migrations
                     b.ToTable("Clientes");
                 });
 
-            modelBuilder.Entity("HumanCRM_Api.Models.ContratoCliente", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CaminhoArquivo")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ClientesId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("DataUpload")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NomeArquivo")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TipoArquivo")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientesId");
-
-                    b.ToTable("ContratosClientes");
-                });
-
             modelBuilder.Entity("HumanCRM_Api.Models.ProspeccaoCliente", b =>
                 {
                     b.Property<int>("Id")
@@ -203,15 +172,6 @@ namespace HumanCRM_Api.Migrations
                     b.ToTable("ProspeccoesClientes");
                 });
 
-            modelBuilder.Entity("HumanCRM_Api.Models.ContratoCliente", b =>
-                {
-                    b.HasOne("HumanCRM_Api.Models.Clientes", "Clientes")
-                        .WithMany("Contratos")
-                        .HasForeignKey("ClientesId");
-
-                    b.Navigation("Clientes");
-                });
-
             modelBuilder.Entity("HumanCRM_Api.Models.ProspeccaoCliente", b =>
                 {
                     b.HasOne("HumanCRM_Api.Models.Clientes", "Cliente")
@@ -225,8 +185,6 @@ namespace HumanCRM_Api.Migrations
 
             modelBuilder.Entity("HumanCRM_Api.Models.Clientes", b =>
                 {
-                    b.Navigation("Contratos");
-
                     b.Navigation("Prospeccoes");
                 });
 #pragma warning restore 612, 618

@@ -35,6 +35,7 @@ export interface CadastroClientes {
   razaoSocial: string;
   necessidade: string;
   dataProximoContato: string;  
+  dataNascimento: string | null;
 
   prospeccoes: ProspeccaoCliente[];
 }
@@ -72,5 +73,12 @@ export class ClientesService {
     cliente: Partial<CadastroClientes>
   ): Observable<CadastroClientes> {
     return this.http.put<CadastroClientes>(this.apiUrl, cliente);
+  }
+
+  uploadContrato(cliente: number, arquivo: File){
+    const formData: FormData = new FormData();
+    formData.append('arquivo', arquivo);
+
+    return this.http.post(`${this.apiUrl}/upload-contrato/${cliente}`, formData);
   }
 }

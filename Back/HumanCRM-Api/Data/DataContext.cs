@@ -16,6 +16,7 @@ namespace HumanCRM_Api.Data
 
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<ProspeccaoCliente> ProspeccoesClientes { get; set; }
+        public DbSet<ContratoCliente> ContratosClientes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

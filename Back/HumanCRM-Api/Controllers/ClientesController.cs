@@ -70,6 +70,11 @@ namespace HumanCRM_Api.Controllers
                     ResponsavelContato = c.ResponsavelContato,
                     OrigemContato = c.OrigemContato,
                     Observacoes = c.Obs,
+                    Sexo = c.Sexo,
+                    EstadoCivil = c.EstadoCivil,
+                    DataNascimento = c.DataNascimento,
+                    Numero = c.Numero,
+                    OrgaoExpedidor = c.OrgaoExpedidor,
 
 
                     Prospeccoes = c.Prospeccoes
@@ -86,7 +91,7 @@ namespace HumanCRM_Api.Controllers
                             DataProximoContato = p.DataProximoContato,
                             Necessidade = p.Necessidade,
                             InteressePrincipal = p.InteressePrincipal,
-                            OrigemContato  = p.OrigemContato,
+                            OrigemContato = p.OrigemContato,
                             Observacoes = p.Observacoes
                         })
                         .ToList()
@@ -124,7 +129,10 @@ namespace HumanCRM_Api.Controllers
                 RedeSocial = string.Empty,
                 OrigemContato = string.Empty,
                 ResponsavelContato = string.Empty,
-                Obs = string.Empty
+                Obs = string.Empty,
+                Sexo = dto.Sexo,
+                EstadoCivil = dto.EstadoCivil,
+                DataNascimento = dto.DataNascimento
             };
 
             _context.Clientes.Add(cliente);
@@ -185,6 +193,45 @@ namespace HumanCRM_Api.Controllers
             return StatusCode(StatusCodes.Status201Created, response);
         }
 
+        [HttpPost("{clienteId}/contratos")]
+        public async Task<IActionResult> AddContrato(
+    int clienteId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Nenhum arquivo foi enviado.");
+                var cliente = await _context.Clientes.FindAsync(clienteId);
+            if (cliente == null)
+                return NotFound($"Cliente com Id {clienteId} não encontrado.");
+
+            // Lógica para salvar o arquivo no servidor
+            var folder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles", "Contratos");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            var nomeArquivo = $"{Guid.NewGuid()}_{file.FileName}";
+            var caminhoArquivo = Path.Combine(folder, nomeArquivo);
+
+            using (var stream = new FileStream(caminhoArquivo, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var contrato = new ContratoCliente
+            {
+                ClienteId = clienteId,
+                NomeArquivo = file.FileName,
+                CaminhoArquivo = caminhoArquivo,
+                TipoArquivo = file.ContentType,
+                DataUpload = DateTime.UtcNow
+            };
+
+            _context.ContratosClientes.Add(contrato);
+            await _context.SaveChangesAsync();
+            return StatusCode(StatusCodes.Status201Created, contrato);
+        }
+
         //---------------- UPDATE ------------------//
 
         [HttpPut]
@@ -222,6 +269,12 @@ namespace HumanCRM_Api.Controllers
             clientesToUpdate.ResponsavelContato = clientes.ResponsavelContato;
             clientesToUpdate.OrigemContato = clientes.OrigemContato;
             clientesToUpdate.Obs = clientes.Obs;
+            clientesToUpdate.OrgaoExpedidor = clientes.OrgaoExpedidor;
+            clientesToUpdate.Sexo = clientes.Sexo;
+            clientesToUpdate.EstadoCivil = clientes.EstadoCivil;
+            clientesToUpdate.DataNascimento = clientes.DataNascimento;
+            clientesToUpdate.OrgaoExpedidor = clientes.OrgaoExpedidor;
+            clientesToUpdate.DataContato = clientes.DataContato;
 
             await _context.SaveChangesAsync();
             return NoContent();

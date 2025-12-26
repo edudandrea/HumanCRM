@@ -413,12 +413,10 @@
             </div>
             <div class="form-group small">
               <label>Sexo</label>
-
               <select
                 [(ngModel)]="sexo"
                 [disabled]="!podeSalvar"
-                [class.readonly-field]="!podeSalvar"
-              >
+                [class.readonly-field]="!podeSalvar"              >
                 <option [ngValue]="0">Prefiro não informar</option>
                 <option [ngValue]="1">Masculino</option>
                 <option [ngValue]="2">Feminino</option>
@@ -428,18 +426,24 @@
             <div class="form-group small">
               <label>Data de Nascimento</label>
               <input
-                type="text"
+                type="date"
+                id="dataNascimento"
+                [(ngModel)]="dataNascimento"
                 [readonly]="!podeSalvar"
                 [class.readonly-field]="!podeSalvar"
               />
             </div>
             <div class="form-group small">
               <label>Estado Civil</label>
-              <input
-                type="text"
-                [readonly]="!podeSalvar"
+              <select
+                [(ngModel)]="estadoCivil"
+                [disabled]="!podeSalvar"
                 [class.readonly-field]="!podeSalvar"
-              />
+              >
+                <option [ngValue]="0">Solteiro</option>
+                <option [ngValue]="1">Casado</option>
+                <option [ngValue]="2">Divorciado</option>
+              </select>
             </div>
           </div>
         </div>
@@ -538,10 +542,12 @@
         <i class="fa-solid fa-repeat"></i>
         Cancelar
       </button>
+      <button type="button" class="btn-project new" (click)="cancelar()">
+        <i class="fa-solid fa-repeat"></i>
+        Adicionar Documentos
+      </button>
     </div>
   </div>
-
-  <!-- TAB 3 - Prospecção de Clientes -->
 
   <!-- TAB 3 - Prospecção de Clientes -->
   <div class="surface-card" *ngIf="activeTab === 3">
