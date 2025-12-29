@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HumanCRM-Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2155a8816b1131592ee1fe54f62194b2213fbb17")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b23fb1dce133dabe4eecc81a16ec8f352d9b364c")]
 [assembly: System.Reflection.AssemblyProductAttribute("HumanCRM-Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HumanCRM-Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
