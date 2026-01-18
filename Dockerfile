@@ -29,7 +29,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview
 WORKDIR /app
 
 COPY --from=backend-build /app/publish .
-COPY --from=frontend-build /app/frontend/dist /app/wwwroot
+COPY --from=frontend-build /app/frontend/dist/HumanCRM-App /app/wwwroot
 
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
