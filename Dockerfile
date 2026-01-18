@@ -11,16 +11,16 @@ COPY Front/HumanCRM-App .
 RUN npm run build --configuration production
 
 # =========================
-# 2️⃣ Build do .NET 10
+# Build .NET 10
 # =========================
 FROM mcr.microsoft.com/dotnet/sdk:10.0-preview AS backend-build
 WORKDIR /app
 
-COPY Back/*/*.csproj ./Back/
-RUN dotnet restore ./Back/*.csproj
+COPY Back/HumanCRM-Api/HumanCRM-Api.csproj Back/HumanCRM-Api/
+RUN dotnet restore Back/HumanCRM-Api/HumanCRM-Api.csproj
 
 COPY Back ./Back
-RUN dotnet publish ./Back/*.csproj -c Release -o /app/publish
+RUN dotnet publish Back/HumanCRM-Api/HumanCRM-Api.csproj -c Release -o /app/publish
 
 # =========================
 # 3️⃣ Runtime .NET 10
