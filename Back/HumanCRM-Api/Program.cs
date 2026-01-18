@@ -10,9 +10,9 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowAnyOrigin(); // 👈 produção (Railway)
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
@@ -24,10 +24,10 @@ var app = builder.Build();
 
 app.UseCors("CorsPolicy");
 
-// ⚠️ IMPORTANTE: Railway já é HTTPS
-// app.UseHttpsRedirection(); ❌ REMOVER
+// 🔴 ESSENCIAL (SEM ISSO NADA FUNCIONA)
+app.UseRouting();
 
-// 👇 ESSENCIAL PARA O ANGULAR
+// 👇 ESSENCIAL PARA SERVIR O ANGULAR
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -39,9 +39,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
+// API
 app.MapControllers();
 
-// 👇 SEMPRE POR ÚLTIMO
+// Angular (SEMPRE POR ÚLTIMO)
 app.MapFallbackToFile("index.html");
 
 app.Run();
