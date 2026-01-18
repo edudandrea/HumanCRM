@@ -16,11 +16,13 @@ RUN npm run build --configuration production
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS backend-build
 WORKDIR /app
 
-COPY Back/*.csproj ./Back/
-RUN dotnet restore ./Back
+# Copia APENAS o csproj primeiro (cache)
+COPY Back/*/*.csproj ./Back/
+RUN dotnet restore ./Back/*.csproj
 
+# Copia o restante do backend
 COPY Back ./Back
-RUN dotnet publish ./Back -c Release -o /app/publish
+RUN dotnet publish ./Back/*.csproj -c Release -o /app/publish
 
 # =========================
 # 3️⃣ Runtime
