@@ -11,23 +11,21 @@ COPY Front .
 RUN npm run build --configuration production
 
 # =========================
-# 2️⃣ Build do .NET
+# 2️⃣ Build do .NET 10
 # =========================
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS backend-build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-preview AS backend-build
 WORKDIR /app
 
-# Copia APENAS o csproj primeiro (cache)
 COPY Back/*/*.csproj ./Back/
 RUN dotnet restore ./Back/*.csproj
 
-# Copia o restante do backend
 COPY Back ./Back
 RUN dotnet publish ./Back/*.csproj -c Release -o /app/publish
 
 # =========================
-# 3️⃣ Runtime
+# 3️⃣ Runtime .NET 10
 # =========================
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview
 WORKDIR /app
 
 COPY --from=backend-build /app/publish .
@@ -36,4 +34,4 @@ COPY --from=frontend-build /app/frontend/dist /app/wwwroot
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "HumanCRM.Api.dll"]
+ENTRYPOINT ["dotnet", "HumanCRM-Api.dll"]
