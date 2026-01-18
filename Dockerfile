@@ -4,10 +4,10 @@
 FROM node:20 AS frontend-build
 WORKDIR /app/frontend
 
-COPY Front/HUmanCRM-App/package*.json ./
+COPY Front/HumanCRM-App/package*.json ./
 RUN npm install
 
-COPY Front/HUmanCRM-App .
+COPY Front/HumanCRM-App .
 RUN npm run build --configuration production
 
 # =========================
