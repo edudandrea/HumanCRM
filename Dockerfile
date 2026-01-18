@@ -4,7 +4,7 @@
 FROM node:18 AS frontend-build
 WORKDIR /app/frontend
 
-COPY Front/package*.json ./
+COPY Front/HUmanCRM-App/package*.json ./
 RUN npm install
 
 COPY Front .
