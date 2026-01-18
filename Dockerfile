@@ -8,7 +8,7 @@ COPY Front/HumanCRM-App/package*.json ./
 RUN npm install
 
 COPY Front/HumanCRM-App .
-RUN npm run build --configuration production
+RUN npm run build
 
 # =========================
 # Build .NET 10
