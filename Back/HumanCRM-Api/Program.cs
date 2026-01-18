@@ -43,6 +43,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Angular (SEMPRE POR ÚLTIMO)
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("/index.html");
 
 app.Run();
