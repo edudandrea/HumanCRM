@@ -1,13 +1,13 @@
 # =========================
-# 1️⃣ Build do Angular
+# 1️⃣ Build do Angular (Node 20)
 # =========================
-FROM node:18 AS frontend-build
+FROM node:20 AS frontend-build
 WORKDIR /app/frontend
 
-COPY Front/HumanCRM-App/package*.json ./
+COPY Front/HUmanCRM-App/package*.json ./
 RUN npm install
 
-COPY Front/HumanCRM-App .
+COPY Front/HUmanCRM-App .
 RUN npm run build --configuration production
 
 # =========================
