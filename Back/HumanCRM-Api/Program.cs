@@ -39,6 +39,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapFallbackToFile("index.html");
+
 app.MapControllers();
 
 app.Run();
