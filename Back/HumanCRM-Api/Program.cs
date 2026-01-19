@@ -17,32 +17,20 @@ builder.Services.AddCors(opt =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 app.UseCors("CorsPolicy");
 
-// 🔴 ESSENCIAL (SEM ISSO NADA FUNCIONA)
 app.UseRouting();
 
-// 👇 ESSENCIAL PARA SERVIR O ANGULAR
+// 🔴 ESSENCIAL
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseAuthorization();
-
-// API
 app.MapControllers();
 
-// Angular (SEMPRE POR ÚLTIMO)
+// 🔴 Angular SPA fallback (TEM que ser o último)
 app.MapFallbackToFile("/index.html");
 
 app.Run();
