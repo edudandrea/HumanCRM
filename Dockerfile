@@ -29,7 +29,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview
 WORKDIR /app
 
 COPY --from=backend-build /app/publish .
-COPY --from=frontend-build /app/frontend/dist/HumanCRM-App/src /app/wwwroot
+COPY --from=frontend-build /app/frontend/dist/HumanCRM-App/browser /app/wwwroot
 
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "HumanCRM-Api.dll"]
