@@ -23,16 +23,13 @@ COPY Back ./Back
 RUN dotnet publish Back/HumanCRM-Api/HumanCRM-Api.csproj -c Release -o /app/publish
 
 # =========================
-# 3️⃣ Runtime .NET
+# 3️⃣ Runtime
 # =========================
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview
 WORKDIR /app
 
 COPY --from=backend-build /app/publish .
-COPY --from=frontend-build /app/frontend/dist/HumanCRM-App /app/wwwroot
+COPY --from=frontend-build /app/frontend/dist/HumanCRM-App/src /app/wwwroot
 
-# 🔴 ESSENCIAL PARA O RAILWAY
-ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
-
 ENTRYPOINT ["dotnet", "HumanCRM-Api.dll"]
