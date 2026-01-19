@@ -3,12 +3,14 @@ using HumanCRM_Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Database
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddCors(opt =>
+// CORS
+builder.Services.AddCors(options =>
 {
-    opt.AddPolicy("CorsPolicy", policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
@@ -16,21 +18,28 @@ builder.Services.AddCors(opt =>
     });
 });
 
+// Controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// CORS
 app.UseCors("CorsPolicy");
 
+// 🔴 1️⃣ SERVIR ARQUIVOS ESTÁTICOS PRIMEIRO
+app.UseDefaultFiles();   // index.html
+app.UseStaticFiles();    // js, css, assets
+
+// 🔴 2️⃣ ROUTING
 app.UseRouting();
 
-// 🔴 ESSENCIAL
-app.UseDefaultFiles();
-app.UseStaticFiles();
+// 🔴 3️⃣ AUTH (se houver)
+app.UseAuthorization();
 
+// 🔴 4️⃣ API
 app.MapControllers();
 
-// 🔴 Angular SPA fallback (TEM que ser o último)
+// 🔴 5️⃣ SPA FALLBACK (TEM QUE SER O ÚLTIMO)
 app.MapFallbackToFile("/index.html");
 
 app.Run();
