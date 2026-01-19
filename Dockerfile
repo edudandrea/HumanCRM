@@ -31,6 +31,4 @@ WORKDIR /app
 COPY --from=backend-build /app/publish .
 COPY --from=frontend-build /app/frontend/dist/HumanCRM-App /app/wwwroot
 
-ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT:-8080}
-
 ENTRYPOINT ["dotnet", "HumanCRM-Api.dll"]
