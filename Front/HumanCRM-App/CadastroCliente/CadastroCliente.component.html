@@ -35,6 +35,14 @@
       <i class="bi bi-graph-up-arrow"></i>
       <span>Prospecção de Clientes</span>
     </li>
+    <li
+      class="page-tab"
+      [class.active]="activeTab === 4"
+      (click)="setActiveTab(4)"
+    >
+      <i class="bi bi-graph-up-arrow"></i>
+      <span>Documentos</span>
+    </li>
   </ul>
 
   <!-- TAB 1 - Pesquisa -->
@@ -56,13 +64,27 @@
           [(ngModel)]="filtroClientes.id"
         />
       </div>
-      <div class="form-group">
+      <div class="form-group" style="position: relative">
         <label>Nome do Cliente</label>
         <input
           type="text"
           placeholder="Nome"
           [(ngModel)]="filtroClientes.nome"
+          (input)="pesquisarClientesAutocomplete(filtroClientes.nome)"
+          (focus)="pesquisarClientesAutocomplete(filtroClientes.nome)"
+          (blur)="fecharListaClientesComDelay()"
+          autocomplete="off"
         />
+
+        <ul class="autocomplete" *ngIf="mostrarListaClientes">
+          <li
+            *ngFor="let c of clientesFiltrados"
+            (mousedown)="selecionarClienteDaLista(c)"
+          >
+            <strong>{{ c.nome }}</strong>
+            <small *ngIf="c.cpfCnpj">{{ c.cpfCnpj }}</small>
+          </li>
+        </ul>
       </div>
       <div class="form-group small">
         <label>CPF/CNPJ</label>
@@ -416,7 +438,8 @@
               <select
                 [(ngModel)]="sexo"
                 [disabled]="!podeSalvar"
-                [class.readonly-field]="!podeSalvar"              >
+                [class.readonly-field]="!podeSalvar"
+              >
                 <option [ngValue]="0">Prefiro não informar</option>
                 <option [ngValue]="1">Masculino</option>
                 <option [ngValue]="2">Feminino</option>
@@ -542,10 +565,22 @@
         <i class="fa-solid fa-repeat"></i>
         Cancelar
       </button>
-      <button type="button" class="btn-project new" (click)="cancelar()">
-        <i class="fa-solid fa-repeat"></i>
+      <button
+        type="button"
+        class="btn-project new"
+        (click)="abrirSeletorDocumento()"
+      >
+        <i class="fa-solid fa-paperclip"></i>
         Adicionar Documentos
       </button>
+
+      <input
+        #fileInput
+        type="file"
+        accept="application/pdf,image/png"
+        (change)="onDocumentoSelecionado($event)"
+        hidden
+      />
     </div>
   </div>
 
@@ -714,7 +749,7 @@
             </span>
 
             <span class="data">
-              {{ p.dataCriacao | date : "dd/MM/yyyy HH:mm" }}
+              {{ p.dataCriacao | date: "dd/MM/yyyy HH:mm" }}
             </span>
           </div>
 
@@ -750,6 +785,7 @@
           type="button"
           class="btn-project new"
           (click)="atualizarProspeccao()"
+          [disabled]="!prospeccaoSelecionada"
         >
           <i class="fa-regular fa-floppy-disk"></i>
           Salvar Prospecção
@@ -759,209 +795,315 @@
   </div>
 </div>
 
-<ng-template #templateNovoCliente>
-  <div class="modal-content modal-surface">
-    <div class="modal-header modal-surface-header">
-      <div>
-        <h2>Novo Cliente</h2>
-        <p>Preencha os dados básicos para cadastrar um novo cliente.</p>
+<div *ngIf="activeTab === 4" class="docs-wrap">
+  <div class="docs-grid" *ngIf="documentos.length; else vazioDocs">
+    <div class="doc-card" *ngFor="let doc of documentos">
+      <div class="doc-thumb" (click)="abrirPreview(doc, previewTemplate)">
+        <!-- PNG preview -->
+        <img
+          *ngIf="doc.contentType === 'image/png'"
+          [src]="doc.previewUrl"
+          alt="preview"
+        />
+
+        <!-- PDF thumb -->
+        <div *ngIf="doc.contentType === 'application/pdf'" class="pdf-thumb">
+          <i class="fa-regular fa-file-pdf"></i>
+          <span>PDF</span>
+        </div>
       </div>
+
+      <div class="doc-info">
+        <div class="doc-name" title="{{ doc.nomeArquivo }}">
+          {{ doc.nomeArquivo }}
+        </div>
+        <div class="doc-meta">{{ doc.contentType }}</div>
+      </div>
+
+      <div class="doc-actions">
+        <button
+          type="button"
+          class="doc-btn"
+          (click)="abrirPreview(doc, previewTemplate)"
+        >
+          <i class="fa-regular fa-eye"></i>
+        </button>
+
+        <button type="button" class="doc-btn" (click)="downloadDocumento(doc)">
+          <i class="fa-solid fa-download"></i>
+        </button>
+
+        <button
+          type="button"
+          class="doc-btn danger"
+          (click)="excluirDocumento(doc)"
+        >
+          <i class="fa-regular fa-trash-can"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #vazioDocs>
+    <div class="docs-empty">Nenhum documento adicionado ainda.</div>
+  </ng-template>
+
+  <!-- Viewer (opcional) -->
+  <ng-template #previewTemplate>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ documentoAtual?.nomeArquivo }}</h5>
       <button
         type="button"
-        class="btn-project ghost small-btn"
-        (click)="fecharModal()"
-      >
-        <i class="bi bi-x-lg"></i>
-      </button>
+        class="btn-close"
+        aria-label="Close"
+        (click)="fecharPreview()"
+      ></button>
     </div>
 
     <div class="modal-body">
-      <div class="cliente-form">
-        <div class="form-row">
-          <div class="form-group large">
-            <label for="nomeModal">Nome</label>
-            <input type="text" id="nomeModal" [(ngModel)]="nome" />
-          </div>
+      <iframe
+        *ngIf="documentoAtual?.contentType === 'application/pdf'"
+        [src]="documentoAtual?.safeViewerUrl"
+        class="viewer-frame"
+      ></iframe>
+
+      <img
+        *ngIf="documentoAtual?.contentType === 'image/png'"
+        [src]="documentoAtual?.previewUrl"
+        class="viewer-image"
+        alt="imagem"
+      />
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="downloadDocumento(documentoAtual!)"
+      >
+        <i class="fa-solid fa-download"></i> Download
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-danger"
+        (click)="excluirDocumento(documentoAtual!)"
+      >
+        <i class="fa-regular fa-trash-can"></i> Excluir
+      </button>
+
+      <button type="button" class="btn btn-primary" (click)="fecharPreview()">
+        Fechar
+      </button>
+    </div>
+  </ng-template>  
+</div>
+<ng-template #templateNovoCliente>
+    <div class="modal-content modal-surface">
+      <div class="modal-header modal-surface-header">
+        <div>
+          <h2>Novo Cliente</h2>
+          <p>Preencha os dados básicos para cadastrar um novo cliente.</p>
         </div>
+        <button
+          type="button"
+          class="btn-project ghost small-btn"
+          (click)="fecharModal()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="cpfCnpjModal">CPF/CNPJ</label>
-            <input type="text" id="cpfCnpjModal" [(ngModel)]="cpfCnpj" />
+      <div class="modal-body">
+        <div class="cliente-form">
+          <div class="form-row">
+            <div class="form-group large">
+              <label for="nomeModal">Nome</label>
+              <input type="text" id="nomeModal" [(ngModel)]="nome" />
+            </div>
           </div>
 
-          <div class="form-group small">
-            <label for="cpfCnpjModal">DDD</label>
-            <input type="text" id="ddd" [(ngModel)]="ddd" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cpfCnpjModal">CPF/CNPJ</label>
+              <input type="text" id="cpfCnpjModal" [(ngModel)]="cpfCnpj" />
+            </div>
+
+            <div class="form-group small">
+              <label for="cpfCnpjModal">DDD</label>
+              <input type="text" id="ddd" [(ngModel)]="ddd" />
+            </div>
+
+            <div class="form-group">
+              <label for="telefoneModal">Telefone</label>
+              <input type="text" id="telefoneModal" [(ngModel)]="telefone" />
+            </div>
+
+            <div class="form-group">
+              <label for="emailModal">E-mail</label>
+              <input type="email" id="emailModal" [(ngModel)]="email" />
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="telefoneModal">Telefone</label>
-            <input type="text" id="telefoneModal" [(ngModel)]="telefone" />
-          </div>
-
-          <div class="form-group">
-            <label for="emailModal">E-mail</label>
-            <input type="email" id="emailModal" [(ngModel)]="email" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group small tipo-pessoa-group">
-            <label>Tipo de Pessoa</label>
-            <div class="pill-toggle">
-              <button
-                type="button"
-                class="pill-option"
-                [class.active]="tipoPessoa === 'Física'"
-                (click)="tipoPessoa = 'Física'"
-              >
-                Física
-              </button>
-              <button
-                type="button"
-                class="pill-option"
-                [class.active]="tipoPessoa === 'Jurídica'"
-                (click)="tipoPessoa = 'Jurídica'"
-              >
-                Jurídica
-              </button>
-              <button
-                type="button"
-                class="pill-option"
-                [class.active]="tipoPessoa === 'outros'"
-                (click)="tipoPessoa = 'outros'"
-              >
-                Outros
-              </button>
+          <div class="form-row">
+            <div class="form-group small tipo-pessoa-group">
+              <label>Tipo de Pessoa</label>
+              <div class="pill-toggle">
+                <button
+                  type="button"
+                  class="pill-option"
+                  [class.active]="tipoPessoa === 'Física'"
+                  (click)="tipoPessoa = 'Física'"
+                >
+                  Física
+                </button>
+                <button
+                  type="button"
+                  class="pill-option"
+                  [class.active]="tipoPessoa === 'Jurídica'"
+                  (click)="tipoPessoa = 'Jurídica'"
+                >
+                  Jurídica
+                </button>
+                <button
+                  type="button"
+                  class="pill-option"
+                  [class.active]="tipoPessoa === 'outros'"
+                  (click)="tipoPessoa = 'outros'"
+                >
+                  Outros
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="modal-footer form-footer">
-      <button type="button" class="btn-project ghost" (click)="fecharModal()">
-        Cancelar
-      </button>
-      <button
-        type="button"
-        class="btn-project new"
-        (click)="salvarNovoCliente()"
-      >
-        <i class="fa-regular fa-floppy-disk"></i>
-        Salvar Cliente
-      </button>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #templateNovoProsp>
-  <div class="modal-content modal-surface">
-    <div class="modal-header modal-surface-header">
-      <div>
-        <h2>Nova Prospecção</h2>
-        <p>Preencha os dados básicos para cadastrar uma nova prospecção.</p>
+      <div class="modal-footer form-footer">
+        <button type="button" class="btn-project ghost" (click)="fecharModal()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn-project new"
+          (click)="salvarNovoCliente()"
+        >
+          <i class="fa-regular fa-floppy-disk"></i>
+          Salvar Cliente
+        </button>
       </div>
-      <button
-        type="button"
-        class="btn-project ghost small-btn"
-        (click)="fecharModal()"
-      >
-        <i class="bi bi-x-lg"></i>
-      </button>
     </div>
+  </ng-template>
 
-    <div class="modal-body">
-      <div class="cliente-form">
-        <div class="form-row">
-          <div class="form-group large">
-            <label for="nomeModal">Contato da Prospecção</label>
-            <input type="text" id="nomeModal" [(ngModel)]="nome" />
-          </div>
+  <ng-template #templateNovoProsp>
+    <div class="modal-content modal-surface">
+      <div class="modal-header modal-surface-header">
+        <div>
+          <h2>Nova Prospecção</h2>
+          <p>Preencha os dados básicos para cadastrar uma nova prospecção.</p>
         </div>
+        <button
+          type="button"
+          class="btn-project ghost small-btn"
+          (click)="fecharModal()"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
 
-        <div class="form-row">
-          <div class="form-group small">
-            <label for="cpfCnpjModal">Prob (%)</label>
-            <input
-              type="text"
-              id="ddd"
-              [(ngModel)]="prospeccao.probabilidade"
-            />
+      <div class="modal-body">
+        <div class="cliente-form">
+          <div class="form-row">
+            <div class="form-group large">
+              <label for="nomeModal">Contato da Prospecção</label>
+              <input type="text" id="nomeModal" [(ngModel)]="nome" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group small">
+              <label for="cpfCnpjModal">Prob (%)</label>
+              <input
+                type="text"
+                id="ddd"
+                [(ngModel)]="prospeccao.probabilidade"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="telefoneModal">Origem do Contato</label>
+              <input
+                type="text"
+                id="telefoneModal"
+                [(ngModel)]="prospeccao.origemContato"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="emailModal">Interesse</label>
+              <input
+                type="email"
+                id="emailModal"
+                [(ngModel)]="prospeccao.interessePrincipal"
+              />
+            </div>
           </div>
 
           <div class="form-group">
-            <label for="telefoneModal">Origem do Contato</label>
-            <input
-              type="text"
-              id="telefoneModal"
-              [(ngModel)]="prospeccao.origemContato"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="emailModal">Interesse</label>
+            <label for="emailModal">Necessidade</label>
             <input
               type="email"
               id="emailModal"
-              [(ngModel)]="prospeccao.interessePrincipal"
+              [(ngModel)]="prospeccao.necessidade"
             />
           </div>
-        </div>
+          <div class="form-row">
+            <div class="form-group small">
+              <label>Próximo Contato</label>
+              <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
+            </div>
 
-        <div class="form-group">
-          <label for="emailModal">Necessidade</label>
-          <input
-            type="email"
-            id="emailModal"
-            [(ngModel)]="prospeccao.necessidade"
-          />
-        </div>
-        <div class="form-row">
-          <div class="form-group small">
-            <label>Próximo Contato</label>
-            <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
+            <div class="form-group small">
+              <label>Canal</label>
+              <select [(ngModel)]="prospeccao.canal">
+                <option value="">Selecione...</option>
+                <option value="Telefone">Telefone</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="E-mail">E-mail</option>
+                <option value="Visita Presencial">Visita Presencial</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Responsável</label>
+              <input type="text" [(ngModel)]="prospeccao.responsavel" />
+            </div>
           </div>
 
-          <div class="form-group small">
-            <label>Canal</label>
-            <select [(ngModel)]="prospeccao.canal">
-              <option value="">Selecione...</option>
-              <option value="Telefone">Telefone</option>
-              <option value="WhatsApp">WhatsApp</option>
-              <option value="E-mail">E-mail</option>
-              <option value="Visita Presencial">Visita Presencial</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Responsável</label>
-            <input type="text" [(ngModel)]="prospeccao.responsavel" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Observações</label>
-            <textarea rows="3" [(ngModel)]="prospeccao.observacoes"></textarea>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Observações</label>
+              <textarea
+                rows="3"
+                [(ngModel)]="prospeccao.observacoes"
+              ></textarea>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="modal-footer form-footer">
-      <button type="button" class="btn-project ghost" (click)="fecharModal()">
-        Cancelar
-      </button>
-      <button
-        type="button"
-        class="btn-project new"
-        (click)="addNovaProspeccao()"
-      >
-        <i class="fa-solid fa-plus"></i>
-        Incluir Prospecção
-      </button>
+      <div class="modal-footer form-footer">
+        <button type="button" class="btn-project ghost" (click)="fecharModal()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn-project new"
+          (click)="addNovaProspeccao()"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Incluir Prospecção
+        </button>
+      </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>

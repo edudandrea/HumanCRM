@@ -141,8 +141,6 @@ namespace HumanCRM_Api.Controllers
             return CreatedAtAction(nameof(BuscarClientes), new { id = cliente.Id }, cliente);
         }
 
-
-
         [HttpPost("{clienteId}/prospeccoes")]
         public async Task<IActionResult> AddProspeccao(
     int clienteId,
@@ -195,11 +193,11 @@ namespace HumanCRM_Api.Controllers
 
         [HttpPost("{clienteId}/contratos")]
         public async Task<IActionResult> AddContrato(
-    int clienteId, IFormFile file)
+                int clienteId, IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Nenhum arquivo foi enviado.");
-                var cliente = await _context.Clientes.FindAsync(clienteId);
+            var cliente = await _context.Clientes.FindAsync(clienteId);
             if (cliente == null)
                 return NotFound($"Cliente com Id {clienteId} não encontrado.");
 
@@ -324,6 +322,7 @@ namespace HumanCRM_Api.Controllers
                 DataCriacao = prospeccao.DataCriacao
             });
         }
-
     }
+
+    
 }

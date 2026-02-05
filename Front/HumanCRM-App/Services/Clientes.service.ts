@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { ProspeccaoCliente } from './Prospeccao.service';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 export interface CadastroClientes {
   id: number;
@@ -25,17 +26,25 @@ export interface CadastroClientes {
   origemContato: string;
   observacoes: string;
   responsavelContato: string;
-  IE: number,
-  IM: number,
-  dataContato: string,
-  dataCadastro: string,
+  IE: number;
+  IM: number;
+  dataContato: string;
+  dataCadastro: string;
   orgaoExpedidor: string;
   sexo: number;
   estadoCivil: number;
   razaoSocial: string;
   necessidade: string;
-  dataProximoContato: string;  
+  dataProximoContato: string;
   dataNascimento: string | null;
+  nomeArquivo: string;
+  contentType: string;
+  tamanho: number;
+  criadoEm: string;
+
+  downloadUrl: string;
+  previewUrl?: string; // para PNG ou fallback
+  safeViewerUrl?: SafeResourceUrl;
 
   prospeccoes: ProspeccaoCliente[];
 }
@@ -64,21 +73,36 @@ export class ClientesService {
   }
 
   novoCliente(
-    cliente: Partial<CadastroClientes>
+    cliente: Partial<CadastroClientes>,
   ): Observable<CadastroClientes> {
     return this.http.post<CadastroClientes>(this.apiUrl, cliente);
   }
 
   salvarCliente(
-    cliente: Partial<CadastroClientes>
+    cliente: Partial<CadastroClientes>,
   ): Observable<CadastroClientes> {
     return this.http.put<CadastroClientes>(this.apiUrl, cliente);
   }
 
-  uploadContrato(cliente: number, arquivo: File){
-    const formData: FormData = new FormData();
-    formData.append('arquivo', arquivo);
+  uploadDocumento(clienteId: number, file: File) {
+    const form = new FormData();
+    form.append('file', file);
 
-    return this.http.post(`${this.apiUrl}/upload-contrato/${cliente}`, formData);
+    return this.http.post<CadastroClientes>(
+      `${this.apiUrl}/${clienteId}/documentos`,
+      form,
+    );
+  }
+
+  listarDocumentos(clienteId: number) {
+    return this.http.get<CadastroClientes[]>(
+      `${this.apiUrl}/${clienteId}/documentos`,
+    );
+  }
+
+  excluirDocumento(clienteId: number, docId: number) {
+    return this.http.delete<void>(
+      `${this.apiUrl}/${clienteId}/documentos/${docId}`,
+    );
   }
 }

@@ -17,6 +17,7 @@ namespace HumanCRM_Api.Data
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<ProspeccaoCliente> ProspeccoesClientes { get; set; }
         public DbSet<ContratoCliente> ContratosClientes { get; set; }
+        public DbSet<ClienteDocumento> ClienteDocumentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +45,17 @@ namespace HumanCRM_Api.Data
                       .WithMany(c => c.Prospeccoes)
                       .HasForeignKey(p => p.ClienteId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ClienteDocumento>(entity =>
+            {
+                entity.ToTable("ClienteDocumentos");
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.NomeArquivo).HasMaxLength(255).IsRequired();
+                entity.Property(x => x.ContentType).HasMaxLength(80).IsRequired();
+                entity.Property(x => x.Arquivo).IsRequired();
+                entity.HasIndex(x => x.ClienteId);
             });
         }
     }

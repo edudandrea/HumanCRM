@@ -3,11 +3,12 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CadastroClientes, ClientesService } from 'Services/Clientes.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ElementRef, ViewChild } from '@angular/core';
 import {
   ProspeccaoCliente,
   ProspeccaoService,
 } from 'Services/Prospeccao.service';
-
 
 @Component({
   selector: 'app-CadastroCliente',
@@ -28,7 +29,10 @@ export class CadastroClienteComponent implements OnInit {
   cliente: CadastroClientes[] = [];
   selectedCliente?: CadastroClientes;
 
-  idCliente: number | null = null;
+  clientesFiltrados: CadastroClientes[] = [];
+  mostrarListaClientes = false;
+
+  idCliente: number | any;
   nome = '';
   cpfCnpj: number | any = '';
   rg: number | any = '';
@@ -65,6 +69,8 @@ export class CadastroClienteComponent implements OnInit {
   // ---------- Prospecção ----------
   prospeccoes: ProspeccaoCliente[] = [];
 
+  prospeccaoSelecionada: ProspeccaoCliente | null = null;
+
   prospeccao: Partial<ProspeccaoCliente> = this.criarProspeccaoVazia();
 
   // ---------- Filtros ----------
@@ -75,12 +81,27 @@ export class CadastroClienteComponent implements OnInit {
     telefone: '',
   };
 
+  // -------------- Documentos --------------
+  documentosSelecionados: Array<{
+    nome: string;
+    tipo: 'pdf' | 'png';
+    url: SafeResourceUrl;
+    rawUrl: string;
+    tabId: number;
+  }> = [];
+
+  documentos: CadastroClientes[] = [];
+  documentoAtual: CadastroClientes | null = null;
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private toastr: ToastrService,
     private clienteService: ClientesService,
     private prospeccaoService: ProspeccaoService,
     private spinner: NgxSpinnerService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {}
@@ -106,7 +127,7 @@ export class CadastroClienteComponent implements OnInit {
 
   /** Normaliza data ISO → yyyy-MM-dd (para input type="date") */
   private normalizarProspeccao(
-    p: ProspeccaoCliente
+    p: ProspeccaoCliente,
   ): Partial<ProspeccaoCliente> {
     return {
       ...p,
@@ -122,7 +143,7 @@ export class CadastroClienteComponent implements OnInit {
       ...this.prospeccao,
       dataProximoContato: this.prospeccao.dataProximoContato
         ? new Date(
-            this.prospeccao.dataProximoContato + 'T00:00:00'
+            this.prospeccao.dataProximoContato + 'T00:00:00',
           ).toISOString()
         : null,
     };
@@ -132,26 +153,41 @@ export class CadastroClienteComponent implements OnInit {
   // 🔹 CLIENTES
   // =====================================================
 
-  pesquisarClientes(filtro: any): void {
-    this.spinner.show();
+  pesquisarClientesAutocomplete(nome: string): void {
+    const termo = String(nome ?? '').trim();
+
+    if (termo.length < 2) {
+      this.clientesFiltrados = [];
+      this.mostrarListaClientes = false;
+      return;
+    }
+
+    const filtro: any = { nome: termo };
 
     this.clienteService.pesquisarClientes(filtro).subscribe({
       next: (res) => {
-        this.spinner.hide();
-
-        if (!res?.length) {
-          this.toastr.info('Nenhum cliente encontrado.');
-          return;
-        }
-
-        this.carregarCliente(res[0]);
-        this.activeTab = 2;
+        this.clientesFiltrados = res ?? [];
+        this.mostrarListaClientes = this.clientesFiltrados.length > 0;
       },
       error: () => {
-        this.spinner.hide();
-        this.toastr.error('Erro ao buscar clientes');
+        this.clientesFiltrados = [];
+        this.mostrarListaClientes = false;
       },
     });
+  }
+
+  selecionarClienteDaLista(cliente: CadastroClientes) {
+    this.filtroClientes.nome = cliente.nome; // preenche o input (opcional)
+    this.mostrarListaClientes = false;
+    this.clientesFiltrados = [];
+
+    this.setClienteAtual(cliente); // ✅ reaproveita seu método
+  }
+
+  fecharListaClientesComDelay() {
+    setTimeout(() => {
+      this.mostrarListaClientes = false;
+    }, 150);
   }
 
   salvarNovoCliente() {
@@ -222,7 +258,7 @@ export class CadastroClienteComponent implements OnInit {
       sexo: this.sexo,
       estadoCivil: this.estadoCivil,
       orgaoExpedidor: this.orgaoExpedidor,
-      dataNascimento:this.dataNascimento,
+      dataNascimento: this.dataNascimento,
     };
 
     console.group('📤 ATUALIZAR CLIENTE');
@@ -268,6 +304,27 @@ export class CadastroClienteComponent implements OnInit {
     } else {
       this.iniciarProspeccao();
     }
+
+    this.carregarDocumentosCliente(this.idCliente);
+  }
+
+  pesquisarClientes(filtro: any): void {
+    this.spinner.show();
+    this.clienteService.pesquisarClientes(filtro).subscribe({
+      next: (res) => {
+        this.spinner.hide();
+        if (!res?.length) {
+          this.toastr.info('Nenhum cliente encontrado.');
+          return;
+        }
+        this.carregarCliente(res[0]);
+        this.activeTab = 2;
+      },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error('Erro ao buscar clientes');
+      },
+    });
   }
 
   onPesquisarClick(): void {
@@ -298,8 +355,8 @@ export class CadastroClienteComponent implements OnInit {
     this.sexo = c.sexo ?? '';
     this.estadoCivil = c.estadoCivil ?? '';
     this.dataNascimento = c.dataNascimento ?? '';
-    this.orgaoExpedidor = c.orgaoExpedidor
-    
+    this.orgaoExpedidor = c.orgaoExpedidor;
+
     // endereço
     this.rua = c.rua ?? '';
     this.complemento = c.complemento ?? '';
@@ -336,13 +393,12 @@ export class CadastroClienteComponent implements OnInit {
     this.prospeccao = this.criarProspeccaoVazia();
   }
 
-  selecionarProspeccao(p: ProspeccaoCliente) {    
+  selecionarProspeccao(p: ProspeccaoCliente) {
+    this.prospeccaoSelecionada = p;
     this.prospeccao = this.normalizarProspeccao(p);
     this.mostrarHistorico = false;
     console.log('📅 DATA NO FORM:', this.prospeccao.dataProximoContato);
   }
-
-  
 
   addNovaProspeccao() {
     if (!this.idCliente) return;
@@ -424,12 +480,11 @@ export class CadastroClienteComponent implements OnInit {
   }
 
   openNovoProspModal(template: TemplateRef<any>) {
-  this.prospeccao = this.criarProspeccaoVazia();
-  this.modalRef = this.modalService.show(template, {
-    class: 'modal-lg modal-dialog-centered',
-  });
-}
-
+    this.prospeccao = this.criarProspeccaoVazia();
+    this.modalRef = this.modalService.show(template, {
+      class: 'modal-lg modal-dialog-centered',
+    });
+  }
 
   fecharModal() {
     this.modalRef?.hide();
@@ -459,5 +514,136 @@ export class CadastroClienteComponent implements OnInit {
   }
   setActiveSubTab(subTabNumber: number) {
     this.subTabActive = subTabNumber;
+  }
+
+  // =====================================================
+  // 🔹 DOCUMENTOS
+  // =====================================================
+
+  abrirSeletorDocumento(): void {
+    if (!this.idCliente) {
+      this.toastr.warning(
+        'Selecione um cliente antes de adicionar documentos.',
+      );
+      return;
+    }
+    this.fileInput.nativeElement.value = '';
+    this.fileInput.nativeElement.click();
+  }
+
+  abrirPreview(doc: CadastroClientes, template: any): void {
+    this.documentoAtual = doc;
+    this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
+  }
+
+  fecharPreview(): void {
+    this.modalRef?.hide();
+    this.modalRef = undefined;
+    this.documentoAtual = null;
+  }
+
+  visualizarDocumento(doc: any): void {
+    this.documentoAtual = doc;
+    // se você quiser usar subTabActive:
+    this.subTabActive = doc.tabId;
+  }
+
+  onDocumentoSelecionado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    const isPdf = file.type === 'application/pdf';
+    const isPng = file.type === 'image/png';
+
+    if (!isPdf && !isPng) {
+      this.toastr.warning('Selecione um arquivo PDF ou PNG.');
+      return;
+    }
+
+    // ✅ sobe pro backend e salva vinculado ao cliente
+    this.uploadDocumentoCliente(this.idCliente, file);
+  }
+
+  private uploadDocumentoCliente(clienteId: number, file: File): void {
+    this.spinner.show();
+
+    this.clienteService.uploadDocumento(clienteId, file).subscribe({
+      next: (doc: CadastroClientes) => {
+        this.spinner.hide();
+
+        // prepara viewer
+        this.prepararDocumentoParaUI(doc);
+
+        this.documentos = [doc, ...this.documentos];
+        this.toastr.success('Documento adicionado com sucesso!');
+      },
+      error: (err) => {
+        this.spinner.hide();
+        console.error(err);
+        this.toastr.error('Erro ao salvar documento.');
+      },
+    });
+  }
+
+  private prepararDocumentoParaUI(doc: CadastroClientes): void {
+    // ✅ PNG: previewUrl pode ser o próprio downloadUrl (se o endpoint devolver o arquivo direto)
+    if (doc.contentType === 'image/png') {
+      doc.previewUrl = doc.downloadUrl;
+    }
+
+    // ✅ PDF: iframe precisa de SafeResourceUrl
+    if (doc.contentType === 'application/pdf') {
+      doc.safeViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+        doc.downloadUrl,
+      );
+    }
+  }
+
+  downloadDocumento(doc: any): void {
+    const a = document.createElement('a');
+    a.href = doc.rawUrl;
+    a.download = doc.nome;
+    a.target = '_blank';
+    a.click();
+    a.remove();
+  }
+
+  excluirDocumento(doc: CadastroClientes): void {
+    if (!doc?.id) return;
+
+    // opcional: confirmação
+    const ok = confirm(`Excluir o documento "${doc.nomeArquivo}"?`);
+    if (!ok) return;
+
+    this.spinner.show();
+    this.clienteService.excluirDocumento(this.idCliente, doc.id).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.documentos = this.documentos.filter((d) => d.id !== doc.id);
+        if (this.documentoAtual?.id === doc.id) this.fecharPreview();
+        this.toastr.success('Documento excluído!');
+      },
+      error: (err) => {
+        this.spinner.hide();
+        console.error(err);
+        this.toastr.error('Erro ao excluir documento.');
+      },
+    });
+  }
+
+  carregarDocumentosCliente(clienteId: number) {
+    this.documentos = []; // limpa antes
+
+    this.clienteService.listarDocumentos(clienteId).subscribe({
+      next: (docs) => {
+        this.documentos = docs ?? [];
+        // se você usa previewUrl/safeViewerUrl, dá pra montar aqui também
+      },
+      error: () => {
+        this.documentos = [];
+        this.toastr.error('Erro ao carregar documentos do cliente');
+      },
+    });
   }
 }

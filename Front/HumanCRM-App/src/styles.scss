@@ -989,6 +989,288 @@ body {
   transform: scale(0.98);
 }
 
+/* Container da lista */
+.autocomplete {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  background: #ffffff;
+  border: 1px solid #e4e7ec;
+  border-radius: 10px;
+
+  box-shadow: 
+    0 4px 12px rgba(16, 24, 40, 0.08),
+    0 8px 24px rgba(16, 24, 40, 0.06);
+
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 1000;
+
+  padding: 6px 0;
+  margin: 0;
+  list-style: none;
+
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Scrollbar elegante */
+.autocomplete::-webkit-scrollbar {
+  width: 6px;
+}
+
+.autocomplete::-webkit-scrollbar-thumb {
+  background-color: #d0d5dd;
+  border-radius: 6px;
+}
+
+.autocomplete::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Item da lista */
+.autocomplete li {
+  padding: 10px 14px;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+/* Hover */
+.autocomplete li:hover {
+  background: #f9fafb;
+}
+
+/* Nome do cliente */
+.autocomplete li strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #101828;
+}
+
+/* Informações secundárias (CPF, telefone, etc) */
+.autocomplete li small {
+  font-size: 12px;
+  color: #667085;
+}
+
+/* Item selecionado (opcional para teclado no futuro) */
+.autocomplete li.active {
+  background: #eef4ff;
+}
+
+/* Separador suave */
+.autocomplete li:not(:last-child) {
+  border-bottom: 1px solid #f2f4f7;
+}
+
+.sub-tabs {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid #e4e7ec;
+  margin-bottom: 12px;
+}
+
+.sub-tab-btn {
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: #667085;
+}
+
+.sub-tab-btn.active {
+  color: #1d2939;
+  font-weight: 600;
+  border-bottom-color: #2563eb;
+}
+
+.document-viewer {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.docs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Grade */
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+/* Card premium */
+.doc-card {
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.doc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(16, 24, 40, 0.10);
+}
+
+/* Thumb */
+.doc-thumb {
+  height: 140px;
+  background: linear-gradient(135deg, #f8fafc, #eef2f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.doc-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* PDF thumb */
+.pdf-thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #b42318;
+  font-weight: 700;
+}
+
+.pdf-thumb i {
+  font-size: 34px;
+}
+
+.pdf-thumb span {
+  font-size: 12px;
+  color: #7a271a;
+}
+
+/* Info */
+.doc-info {
+  padding: 10px 12px 8px;
+}
+
+.doc-name {
+  font-size: 13px;
+  font-weight: 650;
+  color: #101828;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-meta {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #667085;
+}
+
+/* Actions */
+.doc-actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 12px;
+}
+
+.doc-btn {
+  border: 1px solid #e4e7ec;
+  background: #fff;
+  color: #344054;
+  border-radius: 10px;
+  height: 34px;
+  width: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.doc-btn:hover {
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+.doc-btn.danger {
+  color: #b42318;
+  border-color: #fda29b;
+}
+
+.doc-btn.danger:hover {
+  background: #fff5f5;
+}
+
+/* Empty */
+.docs-empty {
+  padding: 22px;
+  border: 1px dashed #d0d5dd;
+  border-radius: 14px;
+  background: #fbfcfd;
+  color: #667085;
+}
+
+/* Viewer */
+.doc-viewer {
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+}
+
+.viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f2f4f7;
+}
+
+.viewer-title {
+  font-weight: 650;
+  color: #101828;
+  font-size: 13px;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viewer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.viewer-frame {
+  width: 100%;
+  height: 70vh;
+  border: 0;
+}
+
+.viewer-image {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  display: block;
+  background: #0b1220;
+}
+
+
 
 
 
