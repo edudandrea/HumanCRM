@@ -17,9 +17,9 @@ namespace HumanCRM_Api.Models
         [Required]
         public DateTime DataAgendamento { get; set; }
         [Required]
-        public string? Descricao { get; set; }
+        public string Descricao { get; set; }
         [Required]
-        public string? ResponsavelAgendamento { get; set; }
+        public string ResponsavelAgendamento { get; set; }
 
     }
 }

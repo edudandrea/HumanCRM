@@ -379,16 +379,16 @@ body {
 /* Botão de abrir/fechar */
 .toggle-btn {
   position: fixed;
-  top: 18px;
+  top: 2px;
   left: 18px;
   z-index: 1000;
   border: none;
-  background: #ffffff;
+  background: #007b9e;
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 1.3rem;
   cursor: pointer;
-  color: #007b9e;
+  color: #ffffff;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   transition: all 0.2s ease;
 }
@@ -433,13 +433,13 @@ body {
 /* Logo */
 .logo-container {
   text-align: center;
-  margin-bottom: 25px;
+  margin-top: 25px;
 }
 
 .logo-img {
   width: 200px;
   filter: drop-shadow(0 4px 12px rgba(0, 153, 204, 0.25));
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 .logo-title {
@@ -455,7 +455,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   margin-left: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   letter-spacing: 1px;
   color: #6b7280;
   font-family: "Poppins", sans-serif;
@@ -1268,6 +1268,12 @@ body {
   object-fit: contain;
   display: block;
   background: #0b1220;
+}
+
+.chart-wrap {
+  height: 320px;
+  width: 100%;
+  padding-top: 8px;
 }
 
 

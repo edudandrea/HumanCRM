@@ -18,6 +18,7 @@ namespace HumanCRM_Api.Data
         public DbSet<ProspeccaoCliente> ProspeccoesClientes { get; set; }
         public DbSet<ContratoCliente> ContratosClientes { get; set; }
         public DbSet<ClienteDocumento> ClienteDocumentos { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,8 +28,8 @@ namespace HumanCRM_Api.Data
             modelBuilder.Entity<Clientes>(entity =>
             {
                 entity.Property(c => c.Id)
-                      .IsRequired()
-                      .HasMaxLength(50);
+                      .IsRequired();
+                      
 
                 entity.Property(c => c.Nome)
                       .IsRequired()
@@ -57,6 +58,28 @@ namespace HumanCRM_Api.Data
                 entity.Property(x => x.Arquivo).IsRequired();
                 entity.HasIndex(x => x.ClienteId);
             });
+
+            modelBuilder.Entity<Schedule>(entity =>
+                {
+                    entity.HasKey(e => e.AgendamentoId);
+
+                    entity.Property(e => e.AgendamentoId)
+                        .ValueGeneratedOnAdd();
+
+                    entity.Property(e => e.ClienteId)
+                        .IsRequired();
+
+                    entity.Property(e => e.DataAgendamento)
+                        .IsRequired();
+
+                    entity.Property(e => e.Descricao)
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    entity.Property(e => e.ResponsavelAgendamento)
+                        .IsRequired()
+                        .HasMaxLength(150);
+                });
         }
     }
 }

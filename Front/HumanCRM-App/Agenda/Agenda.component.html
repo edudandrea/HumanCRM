@@ -1,36 +1,229 @@
-<div class="outlook-container">
-
-  <div class="header-semana">
-    <h2>Agenda da Semana</h2>
-    <span>{{ semanaInicio | date:'dd/MM' }} — {{ semanaFim | date:'dd/MM' }}</span>
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Agendamentos</h1>
+      <p class="page-subtitle">
+        Visualize os agendamentos por dia ou por semana, com filtros rápidos e cards.
+      </p>
+    </div>
   </div>
 
-  <div class="grade-semanal">
-    @for (dia of agendaSemana; track dia) {
-      <div class="coluna">
-        <div class="coluna-header">
-          <h3>{{ dia.label }}</h3>
-          <div class="data">{{ dia.data | date:'dd/MM' }}</div>
-        </div>
-        <div class="eventos">
-          @for (item of dia.itens; track item) {
-            <div class="evento">
-              <div class="hora">{{ item.horario }}</div>
-              <div class="conteudo">
-                <div class="titulo">{{ item.nomeCliente }}</div>
-                <div class="servico">{{ item.servico }}</div>
-                <div class="profissional">{{ item.profissional }}</div>
-              </div>
-            </div>
-          }
-          @if (dia.itens.length === 0) {
-            <div class="vazio">
-              Nenhum agendamento
-            </div>
-          }
-        </div>
+  <!-- Controle Diário/Semanal -->
+  <div class="surface-card">
+    <div class="surface-header">
+      <div>
+        <h2>Agenda</h2>
+        <p>Escolha o modo e selecione o período para listar os agendamentos.</p>
       </div>
-    }
+
+      <div class="header-actions">
+        <button
+          type="button"
+          class="btn-project ghost"
+          [class.active]="modoAgenda === 'diario'"
+          (click)="setModoAgenda('diario')"
+        >
+          <i class="bi bi-calendar-day"></i>
+          Diário
+        </button>
+
+        <button
+          type="button"
+          class="btn-project ghost"
+          [class.active]="modoAgenda === 'semanal'"
+          (click)="setModoAgenda('semanal')"
+        >
+          <i class="bi bi-calendar-week"></i>
+          Semanal
+        </button>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="form-row">
+      <!-- Diário -->
+      <div class="form-group small" *ngIf="modoAgenda === 'diario'">
+        <label>Data</label>
+        <input type="date" [(ngModel)]="dataSelecionada" (change)="carregarAgendamentos()" />
+      </div>
+
+      <!-- Semanal -->
+      <ng-container *ngIf="modoAgenda === 'semanal'">
+        <div class="form-group small">
+          <label>Início</label>
+          <input type="date" [(ngModel)]="dataInicioSemana" (change)="atualizarSemanaECarregar()" />
+        </div>
+
+        <div class="form-group small">
+          <label>Fim</label>
+          <input type="date" [(ngModel)]="dataFimSemana" (change)="carregarAgendamentos()" />
+        </div>
+      </ng-container>
+
+      <!-- Filtros opcionais -->
+      <div class="form-group">
+        <label>Buscar</label>
+        <input
+          type="text"
+          placeholder="Cliente, profissional, serviço..."
+          [(ngModel)]="textoBusca"
+          (input)="filtrarAgendamentos()"
+        />
+      </div>
+
+      <div class="form-group small">
+        <label>Status</label>
+        <select [(ngModel)]="statusFiltro" (change)="filtrarAgendamentos()">
+          <option value="">Todos</option>
+          <option value="confirmado">Confirmado</option>
+          <option value="pendente">Pendente</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+
+      <div class="form-group small">
+        <label>Ordenação</label>
+        <select [(ngModel)]="ordem" (change)="filtrarAgendamentos()">
+          <option value="horaAsc">Hora (crescente)</option>
+          <option value="horaDesc">Hora (decrescente)</option>
+          <option value="clienteAsc">Cliente (A-Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <button type="button" class="btn-project primary" (click)="carregarAgendamentos()">
+        <i class="bi bi-search"></i>
+        Exibir
+      </button>
+
+      <button type="button" class="btn-project ghost" (click)="irParaHoje()">
+        <i class="bi bi-bullseye"></i>
+        Hoje
+      </button>
+
+      <button type="button" class="btn-project new" (click)="novoAgendamento()">
+        <i class="bi bi-plus-lg"></i>
+        Novo Agendamento
+      </button>
+    </div>
   </div>
 
+  <!-- Resumo do período -->
+  <div class="surface-card agenda-summary">
+    <div class="summary-row">
+      <div class="summary-left">
+        <h2 *ngIf="modoAgenda === 'diario'">
+          {{ dataSelecionada | date:'dd/MM/yyyy' }}
+        </h2>
+
+        <h2 *ngIf="modoAgenda === 'semanal'">
+          Semana: {{ dataInicioSemana | date:'dd/MM' }} — {{ dataFimSemana | date:'dd/MM' }}
+        </h2>
+
+        <p>
+          <strong>{{ agendamentosFiltrados?.length || 0 }}</strong>
+          agendamento(s) encontrado(s).
+        </p>
+      </div>
+
+      <div class="summary-right">
+        <span class="chip">
+          <i class="bi bi-check2-circle"></i>
+          Confirmados: {{ totais?.confirmados || 0 }}
+        </span>
+
+        <span class="chip warn">
+          <i class="bi bi-hourglass-split"></i>
+          Pendentes: {{ totais?.pendentes || 0 }}
+        </span>
+
+        <span class="chip danger">
+          <i class="bi bi-x-circle"></i>
+          Cancelados: {{ totais?.cancelados || 0 }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="surface-card" *ngIf="loading">
+    <div class="docs-empty">
+      Carregando agendamentos...
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div class="surface-card" *ngIf="!loading && (!agendamentosFiltrados || agendamentosFiltrados.length === 0)">
+    <div class="docs-empty">
+      Nenhum agendamento para o período selecionado.
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="agenda-grid" *ngIf="!loading && agendamentosFiltrados?.length">
+    <div class="agenda-card" *ngFor="let a of agendamentosFiltrados" (click)="abrirDetalhes(a)">
+      <div class="agenda-card-header">
+        <div class="left">
+          <span class="agenda-time">
+            <i class="bi bi-clock"></i>
+            {{ a.dataHora | date:'HH:mm' }}
+          </span>
+
+          <span class="agenda-date" *ngIf="modoAgenda === 'semanal'">
+            {{ a.dataHora | date:'dd/MM' }}
+          </span>
+        </div>
+
+        <span class="status-badge"
+              [ngClass]="{
+                'confirmado': a.status === 'confirmado',
+                'pendente': a.status === 'pendente',
+                'cancelado': a.status === 'cancelado'
+              }">
+          {{ a.status | titlecase }}
+        </span>
+      </div>
+
+      <div class="agenda-card-body">
+        <h3 class="agenda-title">
+          {{ a.clienteNome || 'Cliente não informado' }}
+        </h3>
+
+        <p class="agenda-sub">
+          <i class="bi bi-person-badge"></i>
+          {{ a.profissionalNome || 'Profissional —' }}
+        </p>
+
+        <p class="agenda-sub">
+          <i class="bi bi-scissors"></i>
+          {{ a.servicoNome || 'Serviço —' }}
+        </p>
+
+        <p class="agenda-notes" *ngIf="a.observacoes">
+          {{ a.observacoes }}
+        </p>
+      </div>
+
+      <div class="agenda-card-footer" (click)="$event.stopPropagation()">
+        <button type="button" class="btn-mini" title="Ver" (click)="abrirDetalhes(a)">
+          <i class="bi bi-eye"></i>
+        </button>
+
+        <button type="button" class="btn-mini" title="Editar" (click)="editarAgendamento(a)">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+
+        <button
+          type="button"
+          class="btn-mini danger"
+          title="Cancelar"
+          (click)="cancelarAgendamento(a)"
+          [disabled]="a.status === 'cancelado'"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

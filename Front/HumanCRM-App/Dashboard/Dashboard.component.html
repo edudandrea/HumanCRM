@@ -1,3 +1,50 @@
-<p>
-  Dashboard works!
-</p>
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1>Dashboard</h1>
+      <p class="page-subtitle">
+        Visão geral do dia: agenda, prospecções, contratos e retornos pendentes.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn-project ghost" (click)="irParaHoje()">
+        <i class="bi bi-bullseye"></i>
+        Hoje
+      </button>
+
+      <button
+        type="button"
+        class="btn-project primary"
+        (click)="atualizarDashboard()"
+      >
+        <i class="bi bi-arrow-clockwise"></i>
+        Atualizar
+      </button>
+    </div>
+  </div>
+
+  <div class="surface-card dash-section dash-full">
+    <div class="surface-header">
+      <div>
+        <h2>Resumo (Pizza)</h2>
+        <p>Distribuição do dia: agenda, prospecções, contratos e retornos.</p>
+      </div>
+
+      <div class="section-actions">
+        <button
+          type="button"
+          class="btn-project ghost"
+          (click)="atualizarGrafico()"
+        >
+          <i class="bi bi-pie-chart"></i>
+          Atualizar gráfico
+        </button>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas #pieCanvas></canvas>
+    </div>
+  </div>
+</div>

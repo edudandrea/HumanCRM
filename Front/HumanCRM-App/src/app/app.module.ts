@@ -22,6 +22,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { CadastroClienteComponent } from 'CadastroCliente/CadastroCliente.component';
 
 
+
 @NgModule({ declarations: [	
         AppComponent,
         CadastroClienteComponent,
