@@ -17,7 +17,7 @@ namespace HumanCRM_Api.Models
         public string TipoPessoa { get; set; } = "Física";  
         public string? RG { get; set; }      
         public string? CpfCnpj { get; set; }
-        public int Cep { get; set; }
+        public int? Cep { get; set; }
         public string? Rua { get; set; }
         public int Numero { get; set; }
         public string? Bairro { get; set; }
@@ -36,11 +36,11 @@ namespace HumanCRM_Api.Models
         public string? OrigemContato { get; set; }
         public string? Obs { get; set; }
         public string? RazaoSocial { get; set; }
-        public int IE { get; set; }
-        public int IM { get; set; } 
+        public int? IE { get; set; }
+        public int? IM { get; set; } 
         public string? OrgaoExpedidor { get; set; }
-        public int Sexo { get; set; }
-        public int EstadoCivil { get; set; }
+        public int? Sexo { get; set; }
+        public int? EstadoCivil { get; set; }
         public DateTime? DataCadastro { get; set; }
         public DateTime? DataFuncacao { get; set; }  
         public DateTime? DataContato { get; set; }    
