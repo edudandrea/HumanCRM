@@ -116,39 +116,57 @@ namespace HumanCRM_Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddCliente([FromBody] ClienteDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (dto == null)
+                return BadRequest("Payload inválido.");
+
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                return BadRequest("Nome é obrigatório.");
+
+            if (string.IsNullOrWhiteSpace(dto.TipoPessoa))
+                return BadRequest("TipoPessoa é obrigatório.");
+
+            if (dto.DDD <= 0)
+                return BadRequest("DDD é obrigatório.");
+
+            if (dto.Celular <= 0)
+                return BadRequest("Celular é obrigatório.");
 
             var cliente = new Clientes
             {
-                Nome = dto.Nome,
+                Nome = dto.Nome.Trim(),
+                TipoPessoa = dto.TipoPessoa.Trim(),
                 CpfCnpj = dto.CpfCnpj,
-                Telefone = dto.Telefone,
-                Email = dto.Email,
-                TipoPessoa = dto.TipoPessoa,
-                DDD = dto.DDD,
+                RG = dto.RG,
 
-                // Campos extras da entidade preenchidos com default/null
-                Rua = string.Empty,
-                Numero = 0,
-                Bairro = string.Empty,
-                Cep = 0,
-                Cidade = string.Empty,
-                Estado = string.Empty,
-                RedeSocial = string.Empty,
-                OrigemContato = string.Empty,
-                ResponsavelContato = string.Empty,
-                Obs = string.Empty,
+                Telefone = dto.Telefone ?? "",
+                Email = dto.Email ?? "",
+
+                Cep = dto.Cep > 0 ? dto.Cep : 0,
+                Rua = dto.Rua ?? "",
+                Numero = dto.Numero > 0 ? dto.Numero : 0,
+                Bairro = dto.Bairro ?? "",
+                Cidade = dto.Cidade ?? "",
+                Estado = dto.Estado ?? "",
+                Complemento = dto.Complemento,
+
+                DDD = dto.DDD,
+                Celular = dto.Celular,
+
                 Sexo = dto.Sexo,
                 EstadoCivil = dto.EstadoCivil,
-                DataNascimento = dto.DataNascimento
+
+                IE = 0,
+                IM = 0,
+
+                DataCadastro = DateTime.UtcNow
             };
 
             _context.Clientes.Add(cliente);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(BuscarClientes), new { id = cliente.Id }, cliente);
+            return Ok(new { cliente.Id });
         }
+
 
         [HttpPost("{clienteId}/prospeccoes")]
         public async Task<IActionResult> AddProspeccao(
