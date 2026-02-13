@@ -27,7 +27,20 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-    db.Database.Migrate();
+
+    for (var i = 1; i <= 5; i++)
+    {
+        try
+        {
+            db.Database.Migrate();
+            break;
+        }
+        catch
+        {
+            if (i == 5) throw;
+            Thread.Sleep(3000);
+        }
+    }
 }
 
 // CORS
