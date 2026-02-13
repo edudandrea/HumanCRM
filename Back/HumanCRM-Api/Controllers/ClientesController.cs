@@ -117,11 +117,20 @@ namespace HumanCRM_Api.Controllers
         public async Task<IActionResult> AddCliente([FromBody] ClienteDto dto)
         {
             if (dto == null) return BadRequest("Payload inválido.");
-            if (string.IsNullOrWhiteSpace(dto.Nome)) return BadRequest("Nome é obrigatório.");
-            if (string.IsNullOrWhiteSpace(dto.TipoPessoa)) return BadRequest("TipoPessoa é obrigatório.");
 
-            // Se DDD for obrigatório no seu contrato, descomente:
-            // if (!dto.DDD.HasValue || dto.DDD <= 0) return BadRequest("DDD é obrigatório.");
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                return BadRequest("Nome é obrigatório.");
+
+            if (string.IsNullOrWhiteSpace(dto.TipoPessoa))
+                return BadRequest("TipoPessoa é obrigatório.");
+
+            // ✅ Banco exige DDD NOT NULL
+            if (dto.DDD <= 0)
+                return BadRequest("DDD é obrigatório e deve ser maior que zero.");
+
+            // ✅ Banco exige Numero NOT NULL
+            if (dto.Numero <= 0)
+                return BadRequest("Número é obrigatório e deve ser maior que zero.");
 
             var cliente = new Clientes
             {
@@ -132,32 +141,27 @@ namespace HumanCRM_Api.Controllers
 
                 Cep = dto.Cep,
                 Rua = dto.Rua,
-                Numero = dto.Numero,     // se for int?, ok
+                Numero = dto.Numero,       // int (não nulo)
                 Bairro = dto.Bairro,
                 Cidade = dto.Cidade,
                 Estado = dto.Estado,
                 Complemento = dto.Complemento,
 
-                Email = dto.Email,
+                DDD = dto.DDD,             // int (não nulo)
                 Telefone = dto.Telefone,
-                DDD = dto.DDD,           // se for int?, ok
                 Celular = dto.Celular,
+                Email = dto.Email,
 
                 RedeSocial = dto.RedeSocial,
                 ResponsavelContato = dto.ResponsavelContato,
                 OrigemContato = dto.OrigemContato,
-
-                Obs = dto.Observacoes,   // mapeia Observacoes -> Obs
-
-                Sexo = dto.Sexo,
-                EstadoCivil = dto.EstadoCivil,
+                Obs = dto.Observacoes,
 
                 DataCadastro = DateTime.UtcNow,
                 DataNascimento = dto.DataNascimento,
-
-                // se o banco ainda exigir IE/IM, preencha:
-                IE = 0,
-                IM = 0
+                OrgaoExpedidor = dto.OrgaoExpedidor,
+                Sexo = dto.Sexo,
+                EstadoCivil = dto.EstadoCivil
             };
 
             try
@@ -168,9 +172,11 @@ namespace HumanCRM_Api.Controllers
             }
             catch (Exception ex)
             {
+                // Para você ver o motivo caso exista outra coisa quebrando
                 return StatusCode(500, ex.Message);
             }
         }
+
 
 
 
