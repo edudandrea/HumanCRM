@@ -150,7 +150,7 @@ namespace HumanCRM_Api.Controllers
                 Complemento = dto.Complemento,
 
                 DDD = dto.DDD,
-                Celular = dto.Celular,
+                Celular = dto.Celular ?? 0,
 
                 Sexo = dto.Sexo,
                 EstadoCivil = dto.EstadoCivil,
