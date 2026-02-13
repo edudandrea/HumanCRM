@@ -29,26 +29,36 @@ namespace HumanCRM_Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> BuscarClientes(
-    [FromQuery] int? id,
-    [FromQuery] string? nome,
-    [FromQuery] string? cpfCnpj,
-    [FromQuery] string? telefone)
+                            [FromQuery] int? id,
+                            [FromQuery] string? nome,
+                            [FromQuery] string? cpfCnpj,
+                            [FromQuery] string? telefone)
         {
             if (id == null &&
-                string.IsNullOrEmpty(nome) &&
-                string.IsNullOrEmpty(cpfCnpj) &&
-                string.IsNullOrEmpty(telefone))
+                string.IsNullOrWhiteSpace(nome) &&
+                string.IsNullOrWhiteSpace(cpfCnpj) &&
+                string.IsNullOrWhiteSpace(telefone))
             {
                 return BadRequest("Informe ao menos um filtro");
             }
 
-            var clientes = await _context.Clientes
-                .Where(c =>
-                    (id != null && c.Id == id) ||
-                    (!string.IsNullOrEmpty(nome) && c.Nome.Contains(nome)) ||
-                    (!string.IsNullOrEmpty(cpfCnpj) && c.CpfCnpj.Contains(cpfCnpj)) ||
-                    (!string.IsNullOrEmpty(telefone) && c.Telefone.Contains(telefone))
-                )
+            var query = _context.Clientes
+                .AsNoTracking()
+                .AsQueryable();
+
+            if (id.HasValue)
+                query = query.Where(c => c.Id == id.Value);
+
+            if (!string.IsNullOrWhiteSpace(nome))
+                query = query.Where(c => EF.Functions.ILike(c.Nome ?? "", $"%{nome}%"));
+
+            if (!string.IsNullOrWhiteSpace(cpfCnpj))
+                query = query.Where(c => (c.CpfCnpj ?? "").Contains(cpfCnpj));
+
+            if (!string.IsNullOrWhiteSpace(telefone))
+                query = query.Where(c => (c.Telefone ?? "").Contains(telefone));
+
+            var clientes = await query
                 .Select(c => new ClienteDto
                 {
                     Id = c.Id,
@@ -75,7 +85,6 @@ namespace HumanCRM_Api.Controllers
                     DataNascimento = c.DataNascimento,
                     Numero = c.Numero,
                     OrgaoExpedidor = c.OrgaoExpedidor,
-
 
                     Prospeccoes = c.Prospeccoes
                         .OrderByDescending(p => p.DataCriacao)
@@ -236,7 +245,7 @@ namespace HumanCRM_Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> UpdateClientes([FromBody] Clientes clientes)
         {
-            var clientesToUpdate = _context.Clientes.FirstOrDefault(clientes => clientes.Id == clientes.Id);
+            var clientesToUpdate = await _context.Clientes.FirstOrDefaultAsync(c => c.Id == clientes.Id);
             if (clientesToUpdate == null)
             {
                 return NotFound();
