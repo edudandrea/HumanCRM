@@ -19,7 +19,7 @@ namespace HumanCRM_Api.Models
         public string? CpfCnpj { get; set; }
         public int? Cep { get; set; }
         public string? Rua { get; set; }
-        public int Numero { get; set; }
+        public int? Numero { get; set; }
         public string? Bairro { get; set; }
         public string? Cidade { get; set; }
 
@@ -27,7 +27,7 @@ namespace HumanCRM_Api.Models
         public string? Complemento { get; set; }
 
         // Contato
-        public int DDD { get; set; }
+        public int? DDD { get; set; }
         public string? Telefone { get; set; }
         public int? Celular { get; set; }
         public string? Email { get; set; }

@@ -116,53 +116,62 @@ namespace HumanCRM_Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddCliente([FromBody] ClienteDto dto)
         {
-            if (dto == null)
-                return BadRequest("Payload inválido.");
+            if (dto == null) return BadRequest("Payload inválido.");
+            if (string.IsNullOrWhiteSpace(dto.Nome)) return BadRequest("Nome é obrigatório.");
+            if (string.IsNullOrWhiteSpace(dto.TipoPessoa)) return BadRequest("TipoPessoa é obrigatório.");
 
-            if (string.IsNullOrWhiteSpace(dto.Nome))
-                return BadRequest("Nome é obrigatório.");
-
-            if (string.IsNullOrWhiteSpace(dto.TipoPessoa))
-                return BadRequest("TipoPessoa é obrigatório.");
-
-            if (dto.DDD <= 0)
-                return BadRequest("DDD é obrigatório.");            
+            // Se DDD for obrigatório no seu contrato, descomente:
+            // if (!dto.DDD.HasValue || dto.DDD <= 0) return BadRequest("DDD é obrigatório.");
 
             var cliente = new Clientes
             {
                 Nome = dto.Nome.Trim(),
                 TipoPessoa = dto.TipoPessoa.Trim(),
-                CpfCnpj = dto.CpfCnpj,
                 RG = dto.RG,
+                CpfCnpj = dto.CpfCnpj,
 
-                Telefone = dto.Telefone ?? "",
-                Email = dto.Email ?? "",
-
-                Cep = dto.Cep > 0 ? dto.Cep : 0,
-                Rua = dto.Rua ?? "",
-                Numero = dto.Numero > 0 ? dto.Numero : 0,
-                Bairro = dto.Bairro ?? "",
-                Cidade = dto.Cidade ?? "",
-                Estado = dto.Estado ?? "",
+                Cep = dto.Cep,
+                Rua = dto.Rua,
+                Numero = dto.Numero,     // se for int?, ok
+                Bairro = dto.Bairro,
+                Cidade = dto.Cidade,
+                Estado = dto.Estado,
                 Complemento = dto.Complemento,
 
-                DDD = dto.DDD,
+                Email = dto.Email,
+                Telefone = dto.Telefone,
+                DDD = dto.DDD,           // se for int?, ok
                 Celular = dto.Celular,
+
+                RedeSocial = dto.RedeSocial,
+                ResponsavelContato = dto.ResponsavelContato,
+                OrigemContato = dto.OrigemContato,
+
+                Obs = dto.Observacoes,   // mapeia Observacoes -> Obs
 
                 Sexo = dto.Sexo,
                 EstadoCivil = dto.EstadoCivil,
 
-                IE = 0,
-                IM = 0,
+                DataCadastro = DateTime.UtcNow,
+                DataNascimento = dto.DataNascimento,
 
-                DataCadastro = DateTime.UtcNow
+                // se o banco ainda exigir IE/IM, preencha:
+                IE = 0,
+                IM = 0
             };
 
-            _context.Clientes.Add(cliente);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { cliente.Id });
+            try
+            {
+                _context.Clientes.Add(cliente);
+                await _context.SaveChangesAsync();
+                return Ok(new { cliente.Id });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
 
         [HttpPost("{clienteId}/prospeccoes")]
