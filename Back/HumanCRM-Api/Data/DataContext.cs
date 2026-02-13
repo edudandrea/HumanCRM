@@ -38,6 +38,9 @@ namespace HumanCRM_Api.Data
                 entity.Property(c => c.TipoPessoa)
                       .IsRequired()
                       .HasMaxLength(20);
+
+                entity.Property(c => c.Celular).IsRequired(false);
+
             });
 
             modelBuilder.Entity<ProspeccaoCliente>(entity =>

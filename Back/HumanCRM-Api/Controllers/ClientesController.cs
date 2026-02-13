@@ -126,10 +126,7 @@ namespace HumanCRM_Api.Controllers
                 return BadRequest("TipoPessoa é obrigatório.");
 
             if (dto.DDD <= 0)
-                return BadRequest("DDD é obrigatório.");
-
-            if (dto.Celular <= 0)
-                return BadRequest("Celular é obrigatório.");
+                return BadRequest("DDD é obrigatório.");            
 
             var cliente = new Clientes
             {
@@ -150,7 +147,7 @@ namespace HumanCRM_Api.Controllers
                 Complemento = dto.Complemento,
 
                 DDD = dto.DDD,
-                Celular = dto.Celular ?? 0,
+                Celular = dto.Celular,
 
                 Sexo = dto.Sexo,
                 EstadoCivil = dto.EstadoCivil,
