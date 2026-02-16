@@ -200,7 +200,6 @@ export class CadastroClienteComponent implements OnInit {
       email: this.email,
       tipoPessoa: this.tipoPessoa,
       ddd: Number(this.ddd),
-      numero: Number(this.numero),
       celular: this.celular ? Number(this.celular) : undefined,
         
     };
