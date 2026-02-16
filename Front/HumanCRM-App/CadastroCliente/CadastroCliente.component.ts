@@ -37,7 +37,7 @@ export class CadastroClienteComponent implements OnInit {
   cpfCnpj: number | any = '';
   rg: number | any = '';
   ddd: number | any = '';
-  telefone: number | any = '';
+  telefone: string | any = '';
   celular?: number;
   email = '';
   tipoPessoa = 'Física';
