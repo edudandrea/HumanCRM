@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\Back\\HumanCRM-Api\\HumanCRM-Api.csproj": {}
+    "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\back\\humancrm-api\\HumanCRM-Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\Back\\HumanCRM-Api\\HumanCRM-Api.csproj": {
+    "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\back\\humancrm-api\\HumanCRM-Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\Back\\HumanCRM-Api\\HumanCRM-Api.csproj",
+        "projectUniqueName": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\back\\humancrm-api\\HumanCRM-Api.csproj",
         "projectName": "HumanCRM-Api",
-        "projectPath": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\Back\\HumanCRM-Api\\HumanCRM-Api.csproj",
+        "projectPath": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\back\\humancrm-api\\HumanCRM-Api.csproj",
         "packagesPath": "C:\\Users\\Eduardo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\Back\\HumanCRM-Api\\obj\\",
+        "outputPath": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\back\\humancrm-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Eduardo\\AppData\\Roaming\\NuGet\\NuGet.Config"

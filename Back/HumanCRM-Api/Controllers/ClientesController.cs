@@ -56,7 +56,8 @@ namespace HumanCRM_Api.Controllers
                 query = query.Where(c => (c.CpfCnpj ?? "").Contains(cpfCnpj));
 
             if (!string.IsNullOrWhiteSpace(telefone))
-                query = query.Where(c => (c.Telefone ?? 0).ToString().Contains(telefone));
+                query = query.Where(c => EF.Functions.ILike(c.Telefone ?? "", $"%{telefone}%"));
+
 
             var clientes = await query
                 .Select(c => new ClienteDto

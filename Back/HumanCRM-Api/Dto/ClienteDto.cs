@@ -23,7 +23,7 @@ namespace HumanCRM_Api.Dto
         public int? Sexo { get; set; }
         public int? EstadoCivil { get; set; }
         public int? DDD { get; set; }
-        public int? Telefone { get; set; }
+        public string? Telefone { get; set; }
         public int? Celular { get; set; }
         public DateTime? DataNascimento { get; set; }
         public List<ProspeccaoResponseDto>? Prospeccoes { get; set; }

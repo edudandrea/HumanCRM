@@ -28,7 +28,7 @@ namespace HumanCRM_Api.Models
 
         // Contato
         public int? DDD { get; set; }
-        public int? Telefone { get; set; }
+        public string? Telefone { get; set; }
         public int? Celular { get; set; }
         public string? Email { get; set; }
         public string? RedeSocial { get; set; }
