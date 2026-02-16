@@ -38,7 +38,7 @@ export class CadastroClienteComponent implements OnInit {
   rg: number | any = '';
   ddd: number | any = '';
   telefone: string | any = '';
-  celular?: number;
+  celular: number | any = '';
   email = '';
   tipoPessoa = 'Física';
 
@@ -240,7 +240,7 @@ export class CadastroClienteComponent implements OnInit {
       rg: this.rg,
 
       telefone: this.telefone,
-      celular: this.celular ? Number(this.celular) : undefined,       
+      celular: this.celular ? Number(this.celular) :undefined,       
 
       email: this.email,
       tipoPessoa: String(this.tipoPessoa ?? '').trim(),
