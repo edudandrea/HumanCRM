@@ -196,7 +196,7 @@ export class CadastroClienteComponent implements OnInit {
     const cliente = {
       nome: this.nome,
       cpfCnpj: this.cpfCnpj,
-      telefone: this.telefone,
+      telefone: Number(this.telefone),
       email: this.email,
       tipoPessoa: this.tipoPessoa,
       ddd: Number(this.ddd),
