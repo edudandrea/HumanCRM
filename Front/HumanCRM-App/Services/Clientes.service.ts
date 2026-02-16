@@ -17,7 +17,7 @@ export interface CadastroClientes {
   cidade: string;
   estado: string;
   complemento: string;
-  telefone: number;
+  telefone: string;
   ddd: number;
   rg: number;
   celular: number;
@@ -78,7 +78,7 @@ export class ClientesService {
     return this.http.post<CadastroClientes>(this.apiUrl, cliente);
   }
 
-  salvarCliente(
+  atualizarCliente(
     cliente: Partial<CadastroClientes>,
   ): Observable<CadastroClientes> {
     return this.http.put<CadastroClientes>(this.apiUrl, cliente);

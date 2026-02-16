@@ -45,7 +45,7 @@ export class CadastroClienteComponent implements OnInit {
   rua = '';
   complemento = '';
   numero: number | any = '';
-  cep: number | any = '';
+  cep: number | 0 = 0;
   bairro = '';
   cidade = '';
   estado = '';
@@ -196,12 +196,10 @@ export class CadastroClienteComponent implements OnInit {
     const cliente = {
       nome: this.nome,
       cpfCnpj: this.cpfCnpj,
-      telefone: Number(this.telefone),
       email: this.email,
       tipoPessoa: this.tipoPessoa,
       ddd: Number(this.ddd),
       celular: this.celular ? Number(this.celular) : undefined,
-        
     };
 
     console.group('📤 NOVO CLIENTE');
@@ -237,30 +235,39 @@ export class CadastroClienteComponent implements OnInit {
 
     const payload = {
       id: this.idCliente,
-      nome: this.nome,
+      nome: String(this.nome ?? '').trim(),
       cpfCnpj: this.cpfCnpj,
       rg: this.rg,
-      telefone: Number(this.telefone),
-      celular: this.celular ? Number(this.celular) : undefined,
+
+      telefone: String(this.telefone ?? '').replace(/\D/g, ''), // ou .trim()
+      celular: this.celular
+        ? Number(String(this.celular).replace(/\D/g, ''))
+        : undefined,
+
       email: this.email,
-      tipoPessoa: this.tipoPessoa,
+      tipoPessoa: String(this.tipoPessoa ?? '').trim(),
+
       rua: this.rua,
-      numero: this.numero,
+      numero: this.numero ? Number(this.numero) : 0,
       complemento: this.complemento,
-      cep: Number(this.cep),
+      cep: this.cep ? Number(this.cep) : undefined,
+
       bairro: this.bairro,
       cidade: this.cidade,
       estado: this.estado,
-      ddd: Number(this.ddd),
+
+      ddd: this.ddd ? Number(this.ddd) : 0,
+
       responsavelContato: this.responsavelContato,
       origemContato: this.origemContato,
       redeSocial: this.redeSocial,
       observacoes: this.observacoes,
       razaoSocial: this.razaoSocial,
-      sexo: this.sexo,
-      estadoCivil: this.estadoCivil,
+
+      sexo: this.sexo ?? null,
+      estadoCivil: this.estadoCivil ?? null,
       orgaoExpedidor: this.orgaoExpedidor,
-      dataNascimento: this.dataNascimento,
+      dataNascimento: this.dataNascimento ?? null,
     };
 
     console.group('📤 ATUALIZAR CLIENTE');
@@ -269,7 +276,7 @@ export class CadastroClienteComponent implements OnInit {
 
     this.spinner.show();
 
-    this.clienteService.salvarCliente(payload).subscribe({
+    this.clienteService.atualizarCliente(payload).subscribe({
       next: (res) => {
         this.spinner.hide();
         this.toastr.success('Cliente atualizado com sucesso!', 'Sucesso');
