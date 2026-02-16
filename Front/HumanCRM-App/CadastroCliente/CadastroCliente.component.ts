@@ -240,9 +240,7 @@ export class CadastroClienteComponent implements OnInit {
       rg: this.rg,
 
       telefone: this.telefone,
-      celular: this.celular
-        ? Number(String(this.celular).replace(/\D/g, ''))
-        : undefined,
+      celular: this.celular,       
 
       email: this.email,
       tipoPessoa: String(this.tipoPessoa ?? '').trim(),
