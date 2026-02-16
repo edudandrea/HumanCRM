@@ -239,7 +239,7 @@ export class CadastroClienteComponent implements OnInit {
       cpfCnpj: this.cpfCnpj,
       rg: this.rg,
 
-      telefone: String(this.telefone ?? '').replace(/\D/g, ''), // ou .trim()
+      telefone: this.telefone,
       celular: this.celular
         ? Number(String(this.celular).replace(/\D/g, ''))
         : undefined,
