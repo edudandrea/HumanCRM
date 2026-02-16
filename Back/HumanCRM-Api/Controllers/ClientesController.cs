@@ -117,58 +117,48 @@ namespace HumanCRM_Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> AddCliente([FromBody] ClienteDto dto)
         {
-            if (dto == null) return BadRequest("Payload inválido.");
-
-            if (string.IsNullOrWhiteSpace(dto.Nome))
-                return BadRequest("Nome é obrigatório.");
-
-            if (string.IsNullOrWhiteSpace(dto.TipoPessoa))
-                return BadRequest("TipoPessoa é obrigatório.");
-
-            // ✅ Banco exige DDD NOT NULL
-            if (dto.DDD <= 0)
-                return BadRequest("DDD é obrigatório e deve ser maior que zero.");
-
-            // ✅ Banco exige Numero NOT NULL
-            if (dto.Numero <= 0)
-                return BadRequest("Número é obrigatório e deve ser maior que zero.");
-
-            var cliente = new Clientes
-            {
-                Nome = dto.Nome.Trim(),
-                TipoPessoa = dto.TipoPessoa.Trim(),
-                RG = dto.RG,
-                CpfCnpj = dto.CpfCnpj,
-
-                Cep = dto.Cep,
-                Rua = dto.Rua,
-                Numero = dto.Numero,       // int (não nulo)
-                Bairro = dto.Bairro,
-                Cidade = dto.Cidade,
-                Estado = dto.Estado,
-                Complemento = dto.Complemento,
-
-                DDD = dto.DDD,             // int (não nulo)
-                Telefone = dto.Telefone,
-                Celular = dto.Celular,
-                Email = dto.Email,
-
-                RedeSocial = dto.RedeSocial,
-                ResponsavelContato = dto.ResponsavelContato,
-                OrigemContato = dto.OrigemContato,
-                Obs = dto.Observacoes,
-
-                DataCadastro = DateTime.UtcNow,
-                DataNascimento = dto.DataNascimento,
-                OrgaoExpedidor = dto.OrgaoExpedidor,
-                Sexo = dto.Sexo,
-                EstadoCivil = dto.EstadoCivil
-            };
-
             try
             {
+                if (dto == null) return BadRequest("Payload inválido.");
+                if (string.IsNullOrWhiteSpace(dto.Nome)) return BadRequest("Nome é obrigatório.");
+                if (string.IsNullOrWhiteSpace(dto.TipoPessoa)) return BadRequest("TipoPessoa é obrigatório.");
+                if (dto.DDD <= 0) return BadRequest("DDD é obrigatório.");
+                if (dto.Numero <= 0) return BadRequest("Número é obrigatório.");
+
+                var cliente = new Clientes
+                {
+                    Nome = dto.Nome.Trim(),
+                    TipoPessoa = dto.TipoPessoa.Trim(),
+                    CpfCnpj = dto.CpfCnpj,
+                    RG = dto.RG,
+                    DDD = dto.DDD,
+                    Numero = dto.Numero,
+
+                    Telefone = dto.Telefone,
+                    Celular = dto.Celular,
+                    Email = dto.Email,
+
+                    Cep = dto.Cep,
+                    Rua = dto.Rua,
+                    Bairro = dto.Bairro,
+                    Cidade = dto.Cidade,
+                    Estado = dto.Estado,
+                    Complemento = dto.Complemento,
+
+                    Sexo = dto.Sexo,
+                    EstadoCivil = dto.EstadoCivil,
+                    OrgaoExpedidor = dto.OrgaoExpedidor,
+
+                    DataCadastro = DateTime.UtcNow,
+
+                    // ✅ importante: garantir listas não nulas
+                    Prospeccoes = new List<ProspeccaoCliente>(),
+                    Contratos = new List<ContratoCliente>()
+                };
+
                 _context.Clientes.Add(cliente);
                 await _context.SaveChangesAsync();
+
                 return Ok(new { cliente.Id });
             }
             catch (DbUpdateException ex)
