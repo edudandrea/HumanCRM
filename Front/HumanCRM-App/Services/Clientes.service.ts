@@ -78,12 +78,9 @@ export class ClientesService {
     return this.http.post<CadastroClientes>(this.apiUrl, cliente);
   }
 
-  atualizarCliente(
-    id: number,
-    cliente: Partial<CadastroClientes>,
-  ): Observable<CadastroClientes> {
-    return this.http.put<CadastroClientes>(`${this.apiUrl}/${id}`, cliente);
-  }
+  atualizarCliente(id: number, cliente: Partial<CadastroClientes>): Observable<CadastroClientes> {
+  return this.http.put<CadastroClientes>(`${this.apiUrl}/${id}`, cliente);
+}
 
   uploadDocumento(clienteId: number, file: File) {
     const form = new FormData();
