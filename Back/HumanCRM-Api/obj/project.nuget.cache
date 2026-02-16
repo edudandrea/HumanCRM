@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UjK0YmnqWx8=",
+  "dgSpecHash": "UtxWQdN/jGQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\back\\humancrm-api\\HumanCRM-Api.csproj",
+  "projectFilePath": "C:\\Users\\Eduardo\\Projetos\\HumanCRM\\Back\\HumanCRM-Api\\HumanCRM-Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Eduardo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Eduardo\\.nuget\\packages\\microsoft.build\\17.7.2\\microsoft.build.17.7.2.nupkg.sha512",

@@ -38,7 +38,7 @@ export class CadastroClienteComponent implements OnInit {
   rg: number | any = '';
   ddd: number | any = '';
   telefone = '';
-  celular: number | any = '';
+  celular?: number;
   email = '';
   tipoPessoa = 'Física';
 
@@ -199,7 +199,10 @@ export class CadastroClienteComponent implements OnInit {
       telefone: this.telefone,
       email: this.email,
       tipoPessoa: this.tipoPessoa,
-      ddd: this.ddd,
+      ddd: Number(this.ddd),
+      numero: Number(this.numero),
+      celular: this.celular ? Number(this.celular) : undefined,
+        
     };
 
     console.group('📤 NOVO CLIENTE');

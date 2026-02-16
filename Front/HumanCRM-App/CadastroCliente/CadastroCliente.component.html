@@ -233,7 +233,7 @@
           <div class="form-group small">
             <label>Numero</label>
             <input
-              type="text"
+              type="number"
               id="numero"
               [(ngModel)]="numero"
               [readonly]="!podeSalvar"
@@ -304,7 +304,7 @@
           <div class="form-group small">
             <label>DDD</label>
             <input
-              type="text"
+              type="number"
               id="ddd"
               [(ngModel)]="ddd"
               [readonly]="!podeSalvar"
@@ -931,12 +931,12 @@
 
             <div class="form-group small">
               <label for="cpfCnpjModal">DDD</label>
-              <input type="text" id="ddd" [(ngModel)]="ddd" />
+              <input type="number" id="ddd" [(ngModel)]="ddd" />
             </div>
 
             <div class="form-group">
               <label for="telefoneModal">Telefone</label>
-              <input type="text" id="telefoneModal" [(ngModel)]="telefone" />
+              <input type="number" id="telefoneModal" [(ngModel)]="telefone" />
             </div>
 
             <div class="form-group">
@@ -1024,7 +1024,7 @@
             <div class="form-group small">
               <label for="cpfCnpjModal">Prob (%)</label>
               <input
-                type="text"
+                type="number"
                 id="ddd"
                 [(ngModel)]="prospeccao.probabilidade"
               />
