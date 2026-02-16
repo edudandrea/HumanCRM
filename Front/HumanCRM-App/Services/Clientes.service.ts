@@ -10,7 +10,7 @@ export interface CadastroClientes {
   nome: string;
   tipoPessoa: string;
   cpfCnpj: number;
-  cep: number;
+  cep: number | null;
   rua: string;
   numero: number;
   bairro: string;

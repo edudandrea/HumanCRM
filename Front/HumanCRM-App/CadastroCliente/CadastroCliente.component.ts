@@ -45,7 +45,7 @@ export class CadastroClienteComponent implements OnInit {
   rua = '';
   complemento = '';
   numero: number | any = '';
-  cep: number | 0 = 0;
+  cep: number | null = null;
   bairro = '';
   cidade = '';
   estado = '';
@@ -370,7 +370,7 @@ export class CadastroClienteComponent implements OnInit {
     this.rua = c.rua ?? '';
     this.complemento = c.complemento ?? '';
     this.numero = c.numero ?? '';
-    this.cep = c.cep ?? '';
+    this.cep = c.cep ?? null;
     this.bairro = c.bairro ?? '';
     this.cidade = c.cidade ?? '';
     this.estado = c.estado ?? '';
