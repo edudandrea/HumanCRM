@@ -17,7 +17,7 @@ export interface CadastroClientes {
   cidade: string;
   estado: string;
   complemento: string;
-  telefone: string;
+  telefone: number;
   ddd: number;
   rg: number;
   celular: number;
