@@ -170,13 +170,24 @@ namespace HumanCRM_Api.Controllers
                 await _context.SaveChangesAsync();
                 return Ok(new { cliente.Id });
             }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message,
+                    inner2 = ex.InnerException?.InnerException?.Message
+                });
+            }
             catch (Exception ex)
             {
-                // Para você ver o motivo caso exista outra coisa quebrando
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, new
+                {
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
             }
         }
-
 
 
 
