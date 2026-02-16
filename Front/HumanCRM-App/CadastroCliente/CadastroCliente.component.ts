@@ -240,7 +240,7 @@ export class CadastroClienteComponent implements OnInit {
       rg: this.rg,
 
       telefone: this.telefone,
-      celular: this.celular ? Number(this.celular) :undefined,       
+      celular: this.celular ? Number(this.celular) : undefined,
 
       email: this.email,
       tipoPessoa: String(this.tipoPessoa ?? '').trim(),
@@ -262,10 +262,10 @@ export class CadastroClienteComponent implements OnInit {
       observacoes: this.observacoes,
       razaoSocial: this.razaoSocial,
 
-      sexo: this.sexo ?? null,
-      estadoCivil: this.estadoCivil ?? null,
+      sexo: this.sexo === '' ? undefined : Number(this.sexo),
+      estadoCivil: this.estadoCivil === '' ? undefined : Number(this.estadoCivil),
+      dataNascimento: this.dataNascimento ? this.dataNascimento : null,
       orgaoExpedidor: this.orgaoExpedidor,
-      dataNascimento: this.dataNascimento ?? null,
     };
 
     console.group('📤 ATUALIZAR CLIENTE');
