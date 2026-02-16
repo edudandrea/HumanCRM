@@ -233,39 +233,40 @@ export class CadastroClienteComponent implements OnInit {
 
     if (!this.podeSalvar) return;
 
-    const payload = {
-      id: this.idCliente,
+    const payload: Partial<CadastroClientes> = {
       nome: String(this.nome ?? '').trim(),
-      cpfCnpj: this.cpfCnpj,
-      rg: this.rg,
+      cpfCnpj: this.cpfCnpj ?? undefined,
+      rg: this.rg ?? undefined,
 
-      telefone: this.telefone,
-      celular: this.celular ? Number(this.celular) : undefined,
+      telefone: String(this.telefone ?? '').replace(/\D/g, ''),
 
-      email: this.email,
-      tipoPessoa: String(this.tipoPessoa ?? '').trim(),
+      celular: this.celular
+        ? Number(String(this.celular).replace(/\D/g, ''))
+        : undefined,
 
-      rua: this.rua,
+      email: this.email ?? undefined,
+      tipoPessoa: this.tipoPessoa ?? 'Física',
+
+      rua: this.rua ?? undefined,
       numero: this.numero ? Number(this.numero) : 0,
-      complemento: this.complemento,
-      cep: this.cep ? Number(this.cep) : undefined,
+      complemento: this.complemento ?? undefined,
+      cep: this.cep ? Number(this.cep) : null,
 
-      bairro: this.bairro,
-      cidade: this.cidade,
-      estado: this.estado,
+      bairro: this.bairro ?? undefined,
+      cidade: this.cidade ?? undefined,
+      estado: this.estado ?? undefined,
 
       ddd: this.ddd ? Number(this.ddd) : 0,
 
-      responsavelContato: this.responsavelContato,
-      origemContato: this.origemContato,
-      redeSocial: this.redeSocial,
-      observacoes: this.observacoes,
-      razaoSocial: this.razaoSocial,
+      responsavelContato: this.responsavelContato ?? undefined,
+      origemContato: this.origemContato ?? undefined,
+      redeSocial: this.redeSocial ?? undefined,
+      observacoes: this.observacoes ?? undefined,
 
       sexo: this.sexo === '' ? undefined : Number(this.sexo),
       estadoCivil: this.estadoCivil === '' ? undefined : Number(this.estadoCivil),
+      orgaoExpedidor: this.orgaoExpedidor ?? undefined,
       dataNascimento: this.dataNascimento ? this.dataNascimento : null,
-      orgaoExpedidor: this.orgaoExpedidor,
     };
 
     console.group('📤 ATUALIZAR CLIENTE');
@@ -274,7 +275,7 @@ export class CadastroClienteComponent implements OnInit {
 
     this.spinner.show();
 
-    this.clienteService.atualizarCliente(payload).subscribe({
+    this.clienteService.atualizarCliente(this.idCliente, payload).subscribe({
       next: (res) => {
         this.spinner.hide();
         this.toastr.success('Cliente atualizado com sucesso!', 'Sucesso');

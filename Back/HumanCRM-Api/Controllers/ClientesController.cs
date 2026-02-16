@@ -273,51 +273,67 @@ namespace HumanCRM_Api.Controllers
 
         //---------------- UPDATE ------------------//
 
-        [HttpPut]
+        [HttpPut("{id:int}")]
         [AllowAnonymous]
-        public async Task<IActionResult> UpdateClientes([FromBody] Clientes clientes)
+        public async Task<IActionResult> UpdateClientes(int id, [FromBody] ClienteDto dto)
         {
-            var clientesToUpdate = await _context.Clientes.FirstOrDefaultAsync(c => c.Id == clientes.Id);
-            if (clientesToUpdate == null)
+            try
             {
-                return NotFound();
+                var c = await _context.Clientes.FirstOrDefaultAsync(x => x.Id == id);
+                if (c == null) return NotFound();
+
+                // validações mínimas (o que é NOT NULL no banco)
+                if (string.IsNullOrWhiteSpace(dto.Nome))
+                    return BadRequest("Nome é obrigatório.");
+                if (string.IsNullOrWhiteSpace(dto.TipoPessoa))
+                    return BadRequest("TipoPessoa é obrigatório.");
+                if (dto.DDD <= 0)
+                    return BadRequest("DDD é obrigatório.");
+                if (dto.Numero <= 0)
+                    return BadRequest("Número é obrigatório.");
+
+                c.Nome = dto.Nome.Trim();
+                c.TipoPessoa = dto.TipoPessoa.Trim();
+                c.CpfCnpj = dto.CpfCnpj;
+                c.RG = dto.RG;
+
+                c.Telefone = dto.Telefone;           // string
+                c.Email = dto.Email;
+                c.Celular = dto.Celular;             // int?/long? conforme você definiu
+
+                c.Cep = dto.Cep;
+                c.Rua = dto.Rua;
+                c.Numero = dto.Numero;
+                c.Bairro = dto.Bairro;
+                c.Cidade = dto.Cidade;
+                c.Estado = dto.Estado;
+                c.Complemento = dto.Complemento;
+
+                c.DDD = dto.DDD;
+
+                c.RedeSocial = dto.RedeSocial;
+                c.ResponsavelContato = dto.ResponsavelContato;
+                c.OrigemContato = dto.OrigemContato;
+                c.Obs = dto.Observacoes;             // seu DTO usa Observacoes
+
+                c.OrgaoExpedidor = dto.OrgaoExpedidor;
+                c.Sexo = dto.Sexo;
+                c.EstadoCivil = dto.EstadoCivil;
+                c.DataNascimento = dto.DataNascimento;
+
+                await _context.SaveChangesAsync();
+                return NoContent();
             }
-
-            clientesToUpdate.Nome = clientes.Nome;
-            clientesToUpdate.TipoPessoa = clientes.TipoPessoa;
-            clientesToUpdate.CpfCnpj = clientes.CpfCnpj;
-            clientesToUpdate.Cep = clientes.Cep;
-            clientesToUpdate.Rua = clientes.Rua;
-            clientesToUpdate.Numero = clientes.Numero;
-            clientesToUpdate.Bairro = clientes.Bairro;
-            clientesToUpdate.Cidade = clientes.Cidade;
-            clientesToUpdate.Estado = clientes.Estado;
-            clientesToUpdate.Complemento = clientes.Complemento;
-            clientesToUpdate.RG = clientes.RG;
-            clientesToUpdate.DDD = clientes.DDD;
-            clientesToUpdate.Telefone = clientes.Telefone;
-            clientesToUpdate.Celular = clientes.Celular;
-            clientesToUpdate.Email = clientes.Email;
-            clientesToUpdate.RedeSocial = clientes.RedeSocial;
-            clientesToUpdate.RazaoSocial = clientes.RazaoSocial;
-            clientesToUpdate.IE = clientes.IE;
-            clientesToUpdate.IM = clientes.IM;
-            clientesToUpdate.DataContato = clientes.DataContato;
-            clientesToUpdate.DataCadastro = clientes.DataCadastro;
-            clientesToUpdate.DataFuncacao = clientes.DataFuncacao;
-            clientesToUpdate.ResponsavelContato = clientes.ResponsavelContato;
-            clientesToUpdate.OrigemContato = clientes.OrigemContato;
-            clientesToUpdate.Obs = clientes.Obs;
-            clientesToUpdate.OrgaoExpedidor = clientes.OrgaoExpedidor;
-            clientesToUpdate.Sexo = clientes.Sexo;
-            clientesToUpdate.EstadoCivil = clientes.EstadoCivil;
-            clientesToUpdate.DataNascimento = clientes.DataNascimento;
-            clientesToUpdate.OrgaoExpedidor = clientes.OrgaoExpedidor;
-            clientesToUpdate.DataContato = clientes.DataContato;
-
-            await _context.SaveChangesAsync();
-            return NoContent();
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
         }
+
 
 
         [HttpPut("{clienteId}/prospeccoes/{prospeccaoId}")]
