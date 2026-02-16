@@ -45,7 +45,7 @@ namespace HumanCRM_Api.Models
         public DateTime? DataFuncacao { get; set; }  
         public DateTime? DataContato { get; set; }    
         public DateTime? DataNascimento { get; set; } 
-        public ICollection<ProspeccaoCliente> Prospeccoes { get; set; } = new List<ProspeccaoCliente>();
-        public ICollection<ContratoCliente> Contratos { get; set; }
+        public ICollection<ProspeccaoCliente>? Prospeccoes { get; set; } = new List<ProspeccaoCliente>();
+        public ICollection<ContratoCliente>? Contratos { get; set; }
     }
 }
