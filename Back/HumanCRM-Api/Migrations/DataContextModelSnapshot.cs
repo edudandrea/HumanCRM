@@ -89,17 +89,17 @@ namespace HumanCRM_Api.Migrations
                     b.Property<int?>("DDD")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("DataCadastro")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataCadastro")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime?>("DataContato")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataContato")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime?>("DataFuncacao")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataFuncacao")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime?>("DataNascimento")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataNascimento")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");

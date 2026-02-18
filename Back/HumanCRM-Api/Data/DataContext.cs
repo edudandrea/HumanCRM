@@ -29,7 +29,7 @@ namespace HumanCRM_Api.Data
             {
                 entity.Property(c => c.Id)
                       .IsRequired();
-                      
+
 
                 entity.Property(c => c.Nome)
                       .IsRequired()
@@ -40,6 +40,10 @@ namespace HumanCRM_Api.Data
                       .HasMaxLength(20);
 
                 entity.Property(c => c.Celular).IsRequired(false);
+
+                modelBuilder.Entity<Clientes>()
+                        .Property(x => x.DataNascimento)
+                        .HasColumnType("date");
 
             });
 

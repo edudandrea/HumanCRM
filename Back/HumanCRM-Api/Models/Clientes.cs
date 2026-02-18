@@ -41,10 +41,10 @@ namespace HumanCRM_Api.Models
         public string? OrgaoExpedidor { get; set; }
         public int? Sexo { get; set; }
         public int? EstadoCivil { get; set; }
-        public DateTime? DataCadastro { get; set; }
-        public DateTime? DataFuncacao { get; set; }  
-        public DateTime? DataContato { get; set; }    
-        public DateTime? DataNascimento { get; set; } 
+        public DateOnly DataCadastro { get; set; }
+        public DateOnly DataFuncacao { get; set; }  
+        public DateOnly DataContato { get; set; }    
+        public DateOnly DataNascimento { get; set; } 
         public ICollection<ProspeccaoCliente>? Prospeccoes { get; set; } = new List<ProspeccaoCliente>();
         public ICollection<ContratoCliente> Contratos { get; set; } = new List<ContratoCliente>();
     }

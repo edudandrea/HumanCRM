@@ -25,7 +25,7 @@ namespace HumanCRM_Api.Dto
         public int? DDD { get; set; }
         public string? Telefone { get; set; }
         public long? Celular { get; set; }
-        public DateTime? DataNascimento { get; set; }
+        public DateOnly DataNascimento { get; set; }
         public List<ProspeccaoResponseDto>? Prospeccoes { get; set; }
     }
 }

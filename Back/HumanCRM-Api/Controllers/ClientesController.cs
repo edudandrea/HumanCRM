@@ -149,7 +149,7 @@ namespace HumanCRM_Api.Controllers
                     EstadoCivil = dto.EstadoCivil,
                     OrgaoExpedidor = dto.OrgaoExpedidor,
 
-                    DataCadastro = DateTime.UtcNow,
+                    DataCadastro = DateOnly.FromDateTime(DateTime.UtcNow),
 
                     // ✅ importante: garantir listas não nulas
                     Prospeccoes = new List<ProspeccaoCliente>(),
@@ -206,7 +206,7 @@ namespace HumanCRM_Api.Controllers
                 Canal = dto.Canal,
                 Responsavel = dto.Responsavel,
                 Observacoes = dto.Observacoes,
-                DataCriacao = DateTime.UtcNow
+                DataCriacao = DateOnly.FromDateTime(DateTime.UtcNow)
             };
 
             _context.ProspeccoesClientes.Add(prospeccao);

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HumanCRM_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260216135853_Baseline")]
-    partial class Baseline
+    [Migration("20260218180749_ChangeDataNascimentoToDateOnly")]
+    partial class ChangeDataNascimentoToDateOnly
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,8 +74,8 @@ namespace HumanCRM_Api.Migrations
                     b.Property<string>("Bairro")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Celular")
-                        .HasColumnType("integer");
+                    b.Property<long?>("Celular")
+                        .HasColumnType("bigint");
 
                     b.Property<int?>("Cep")
                         .HasColumnType("integer");
@@ -92,17 +92,17 @@ namespace HumanCRM_Api.Migrations
                     b.Property<int?>("DDD")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("DataCadastro")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataCadastro")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime?>("DataContato")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataContato")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime?>("DataFuncacao")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataFuncacao")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime?>("DataNascimento")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DataNascimento")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
