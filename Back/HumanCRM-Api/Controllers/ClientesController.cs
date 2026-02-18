@@ -209,8 +209,19 @@ namespace HumanCRM_Api.Controllers
                 DataCriacao = DateOnly.FromDateTime(DateTime.UtcNow)
             };
 
-            _context.ProspeccoesClientes.Add(prospeccao);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.ProspeccoesClientes.Add(prospeccao);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = ex.Message,
+                    inner = ex.InnerException?.Message
+                });
+            }
 
             var response = new ProspeccaoResponseDto
             {
