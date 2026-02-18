@@ -50,14 +50,17 @@ namespace HumanCRM_Api.Data
             modelBuilder.Entity<ProspeccaoCliente>(entity =>
             {
                 entity.HasOne(p => p.Cliente)
-                      .WithMany(c => c.Prospeccoes)
-                      .HasForeignKey(p => p.ClienteId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(c => c.Prospeccoes)
+                    .HasForeignKey(p => p.ClienteId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                    modelBuilder.Entity<ProspeccaoCliente>()
-                            .Property(x => x.DataProximoContato)
-                            .HasColumnType("date");
+                modelBuilder.Entity<ProspeccaoCliente>()
+                        .Property(x => x.DataProximoContato)
+                        .HasColumnType("date");
 
+                modelBuilder.Entity<ProspeccaoCliente>()
+                        .Property(x => x.DataProximoContato)
+                        .HasColumnType("date");
 
             });
 
