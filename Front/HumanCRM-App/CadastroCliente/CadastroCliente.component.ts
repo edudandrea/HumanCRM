@@ -142,10 +142,7 @@ export class CadastroClienteComponent implements OnInit {
     return {
       ...this.prospeccao,
       dataProximoContato: this.prospeccao.dataProximoContato
-        ? new Date(
-            this.prospeccao.dataProximoContato + 'T00:00:00',
-          ).toISOString()
-        : null,
+        
     };
   }
 
