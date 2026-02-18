@@ -704,7 +704,8 @@
           <label>Próximo Contato</label>
           <input
             type="date"
-            name="dataProximoContato"
+            id="prosp-dataProximoContato"
+            name="prospDataProximoContato"
             [(ngModel)]="prospeccao.dataProximoContato"
           />
         </div>
@@ -896,214 +897,263 @@
         Fechar
       </button>
     </div>
-  </ng-template>  
+  </ng-template>
 </div>
 <ng-template #templateNovoCliente>
-    <div class="modal-content modal-surface">
-      <div class="modal-header modal-surface-header">
-        <div>
-          <h2>Novo Cliente</h2>
-          <p>Preencha os dados básicos para cadastrar um novo cliente.</p>
-        </div>
-        <button
-          type="button"
-          class="btn-project ghost small-btn"
-          (click)="fecharModal()"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
+  <div class="modal-content modal-surface">
+    <div class="modal-header modal-surface-header">
+      <div>
+        <h2>Novo Cliente</h2>
+        <p>Preencha os dados básicos para cadastrar um novo cliente.</p>
       </div>
-
-      <div class="modal-body">
-        <div class="cliente-form">
-          <div class="form-row">
-            <div class="form-group large">
-              <label for="nomeModal">Nome</label>
-              <input type="text" id="nomeModal" [(ngModel)]="nome" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="cpfCnpjModal">CPF/CNPJ</label>
-              <input type="text" id="cpfCnpjModal" [(ngModel)]="cpfCnpj" />
-            </div>
-
-            <div class="form-group small">
-              <label for="cpfCnpjModal">DDD</label>
-              <input type="number" id="ddd" [(ngModel)]="ddd" />
-            </div>
-
-            <div class="form-group">
-              <label for="telefoneModal">Telefone</label>
-              <input type="number" id="telefoneModal" [(ngModel)]="telefone" />
-            </div>
-
-            <div class="form-group">
-              <label for="emailModal">E-mail</label>
-              <input type="email" id="emailModal" [(ngModel)]="email" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group small tipo-pessoa-group">
-              <label>Tipo de Pessoa</label>
-              <div class="pill-toggle">
-                <button
-                  type="button"
-                  class="pill-option"
-                  [class.active]="tipoPessoa === 'Física'"
-                  (click)="tipoPessoa = 'Física'"
-                >
-                  Física
-                </button>
-                <button
-                  type="button"
-                  class="pill-option"
-                  [class.active]="tipoPessoa === 'Jurídica'"
-                  (click)="tipoPessoa = 'Jurídica'"
-                >
-                  Jurídica
-                </button>
-                <button
-                  type="button"
-                  class="pill-option"
-                  [class.active]="tipoPessoa === 'outros'"
-                  (click)="tipoPessoa = 'outros'"
-                >
-                  Outros
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer form-footer">
-        <button type="button" class="btn-project ghost" (click)="fecharModal()">
-          Cancelar
-        </button>
-        <button
-          type="button"
-          class="btn-project new"
-          (click)="salvarNovoCliente()"
-        >
-          <i class="fa-regular fa-floppy-disk"></i>
-          Salvar Cliente
-        </button>
-      </div>
+      <button
+        type="button"
+        class="btn-project ghost small-btn"
+        (click)="fecharModal()"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
-  </ng-template>
 
-  <ng-template #templateNovoProsp>
-    <div class="modal-content modal-surface">
-      <div class="modal-header modal-surface-header">
-        <div>
-          <h2>Nova Prospecção</h2>
-          <p>Preencha os dados básicos para cadastrar uma nova prospecção.</p>
+    <div class="modal-body">
+      <div class="cliente-form">
+        <div class="form-row">
+          <div class="form-group large">
+            <label for="novo-cli-nome">Nome</label>
+            <input
+              type="text"
+              id="novo-cli-nome"
+              name="novoCliNome"
+              [(ngModel)]="nome"
+            />
+          </div>
         </div>
-        <button
-          type="button"
-          class="btn-project ghost small-btn"
-          (click)="fecharModal()"
-        >
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
 
-      <div class="modal-body">
-        <div class="cliente-form">
-          <div class="form-row">
-            <div class="form-group large">
-              <label for="nomeModal">Contato da Prospecção</label>
-              <input type="text" id="nomeModal" [(ngModel)]="nome" />
-            </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="novo-cli-cpfCnpj">CPF/CNPJ</label>
+            <input
+              type="text"
+              id="novo-cli-cpfCnpj"
+              name="novoCliCpfCnpj"
+              [(ngModel)]="cpfCnpj"
+            />
           </div>
 
-          <div class="form-row">
-            <div class="form-group small">
-              <label for="cpfCnpjModal">Prob (%)</label>
-              <input
-                type="number"
-                id="ddd"
-                [(ngModel)]="prospeccao.probabilidade"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="telefoneModal">Origem do Contato</label>
-              <input
-                type="text"
-                id="telefoneModal"
-                [(ngModel)]="prospeccao.origemContato"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="emailModal">Interesse</label>
-              <input
-                type="email"
-                id="emailModal"
-                [(ngModel)]="prospeccao.interessePrincipal"
-              />
-            </div>
+          <div class="form-group small">
+            <label for="novo-cli-ddd">DDD</label>
+            <input
+              type="number"
+              id="novo-cli-ddd"
+              name="novoCliDdd"
+              [(ngModel)]="ddd"
+            />
           </div>
 
           <div class="form-group">
-            <label for="emailModal">Necessidade</label>
+            <label for="novo-cli-telefone">Telefone</label>
             <input
-              type="email"
-              id="emailModal"
-              [(ngModel)]="prospeccao.necessidade"
+              type="number"
+              id="novo-cli-telefone"
+              name="novoCliTelefone"
+              [(ngModel)]="telefone"
             />
           </div>
-          <div class="form-row">
-            <div class="form-group small">
-              <label>Próximo Contato</label>
-              <input type="date" [(ngModel)]="prospeccao.dataProximoContato" />
-            </div>
 
-            <div class="form-group small">
-              <label>Canal</label>
-              <select [(ngModel)]="prospeccao.canal">
-                <option value="">Selecione...</option>
-                <option value="Telefone">Telefone</option>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="E-mail">E-mail</option>
-                <option value="Visita Presencial">Visita Presencial</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Responsável</label>
-              <input type="text" [(ngModel)]="prospeccao.responsavel" />
-            </div>
+          <div class="form-group">
+            <label for="novo-cli-email">E-mail</label>
+            <input
+              type="email"
+              id="novo-cli-email"
+              name="novoCliEmail"
+              [(ngModel)]="email"
+            />
           </div>
+        </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Observações</label>
-              <textarea
-                rows="3"
-                [(ngModel)]="prospeccao.observacoes"
-              ></textarea>
+        <div class="form-row">
+          <div class="form-group small tipo-pessoa-group">
+            <label>Tipo de Pessoa</label>
+            <div class="pill-toggle">
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'Física'"
+                (click)="tipoPessoa = 'Física'"
+              >
+                Física
+              </button>
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'Jurídica'"
+                (click)="tipoPessoa = 'Jurídica'"
+              >
+                Jurídica
+              </button>
+              <button
+                type="button"
+                class="pill-option"
+                [class.active]="tipoPessoa === 'outros'"
+                (click)="tipoPessoa = 'outros'"
+              >
+                Outros
+              </button>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="modal-footer form-footer">
-        <button type="button" class="btn-project ghost" (click)="fecharModal()">
-          Cancelar
-        </button>
-        <button
-          type="button"
-          class="btn-project new"
-          (click)="addNovaProspeccao()"
-        >
-          <i class="fa-solid fa-plus"></i>
-          Incluir Prospecção
-        </button>
+    <div class="modal-footer form-footer">
+      <button type="button" class="btn-project ghost" (click)="fecharModal()">
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn-project new"
+        (click)="salvarNovoCliente()"
+      >
+        <i class="fa-regular fa-floppy-disk"></i>
+        Salvar Cliente
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateNovoProsp>
+  <div class="modal-content modal-surface">
+    <div class="modal-header modal-surface-header">
+      <div>
+        <h2>Nova Prospecção</h2>
+        <p>Preencha os dados básicos para cadastrar uma nova prospecção.</p>
+      </div>
+      <button
+        type="button"
+        class="btn-project ghost small-btn"
+        (click)="fecharModal()"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="cliente-form">
+        <div class="form-row">
+          <div class="form-group large">
+            <label for="novo-prosp-contato">Contato da Prospecção</label>
+            <input
+              type="text"
+              id="novo-prosp-contato"
+              name="novoProspContato"
+              [(ngModel)]="nome"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group small">
+            <label for="novo-prosp-prob">Prob (%)</label>
+            <input
+              type="number"
+              id="novo-prosp-prob"
+              name="novoProspProb"
+              [(ngModel)]="prospeccao.probabilidade"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="novo-prosp-origem">Origem do Contato</label>
+            <input
+              type="text"
+              id="novo-prosp-origem"
+              name="novoProspOrigem"
+              [(ngModel)]="prospeccao.origemContato"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="novo-prosp-necessidade">Necessidade</label>
+            <input
+              type="text"
+              id="novo-prosp-necessidade"
+              name="novoProspNecessidade"
+              [(ngModel)]="prospeccao.necessidade"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="emailModal">Necessidade</label>
+          <input
+            type="email"
+            id="emailModal"
+            [(ngModel)]="prospeccao.necessidade"
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group small">
+            <label for="novo-prosp-proximoContato">Próximo Contato</label>
+            <input
+              type="date"
+              id="novo-prosp-proximoContato"
+              name="novoProspProximoContato"
+              [(ngModel)]="prospeccao.dataProximoContato"
+            />
+          </div>
+
+          <div class="form-group small">
+            <label>Canal</label>
+            <select
+              id="novo-prosp-canal"
+              name="novoProspCanal"
+              [(ngModel)]="prospeccao.canal"
+            >
+              <option value="">Selecione...</option>
+              <option value="Telefone">Telefone</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="E-mail">E-mail</option>
+              <option value="Visita Presencial">Visita Presencial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="novo-prosp-responsavel">Responsável</label>
+            <input
+              type="text"
+              id="novo-prosp-responsavel"
+              name="novoProspResponsavel"
+              [(ngModel)]="prospeccao.responsavel"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="novo-prosp-observacoes">Observações</label>
+            <textarea
+              id="novo-prosp-observacoes"
+              name="novoProspObservacoes"
+              rows="3"
+              [(ngModel)]="prospeccao.observacoes"
+            ></textarea>
+          </div>
+        </div>
       </div>
     </div>
-  </ng-template>
+
+    <div class="modal-footer form-footer">
+      <button type="button" class="btn-project ghost" (click)="fecharModal()">
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn-project new"
+        (click)="addNovaProspeccao()"
+      >
+        <i class="fa-solid fa-plus"></i>
+        Incluir Prospecção
+      </button>
+    </div>
+  </div>
+</ng-template>
