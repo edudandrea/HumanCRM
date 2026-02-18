@@ -53,6 +53,12 @@ namespace HumanCRM_Api.Data
                       .WithMany(c => c.Prospeccoes)
                       .HasForeignKey(p => p.ClienteId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                    modelBuilder.Entity<ProspeccaoCliente>()
+                            .Property(x => x.DataProximoContato)
+                            .HasColumnType("date");
+
+
             });
 
             modelBuilder.Entity<ClienteDocumento>(entity =>
