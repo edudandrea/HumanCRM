@@ -141,8 +141,7 @@ export class CadastroClienteComponent implements OnInit {
   private prepararPayloadProspeccao() {
     return {
       ...this.prospeccao,
-      dataProximoContato: this.prospeccao.dataProximoContato
-        
+      dataProximoContato: this.prospeccao.dataProximoContato,
     };
   }
 
@@ -261,7 +260,8 @@ export class CadastroClienteComponent implements OnInit {
       observacoes: this.observacoes ?? undefined,
 
       sexo: this.sexo === '' ? undefined : Number(this.sexo),
-      estadoCivil: this.estadoCivil === '' ? undefined : Number(this.estadoCivil),
+      estadoCivil:
+        this.estadoCivil === '' ? undefined : Number(this.estadoCivil),
       orgaoExpedidor: this.orgaoExpedidor ?? undefined,
       dataNascimento: this.dataNascimento ? this.dataNascimento : null,
     };
@@ -409,6 +409,10 @@ export class CadastroClienteComponent implements OnInit {
     if (!this.idCliente) return;
 
     const payload = this.prepararPayloadProspeccao();
+
+    console.group('📤 PAYLOAD PROSPECCAO (FRONTEND)');
+    console.log(JSON.stringify(payload, null, 2));
+    console.groupEnd();
 
     this.spinner.show();
     this.prospeccaoService.addProspeccao(this.idCliente, payload).subscribe({
