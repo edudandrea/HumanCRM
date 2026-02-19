@@ -81,11 +81,19 @@ namespace HumanCRM_Api.Controllers
         public async Task<IActionResult> Download([FromRoute] int clienteId, [FromRoute] int docId)
         {
             var doc = await _context.ClienteDocumentos
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClienteId == clienteId && x.Id == docId);
 
             if (doc == null) return NotFound();
 
-            return File(doc.Arquivo, doc.ContentType, doc.NomeArquivo);
+            // ✅ Força abrir no navegador/iframe (em vez de baixar)
+            Response.Headers.ContentDisposition = new Microsoft.Net.Http.Headers.ContentDispositionHeaderValue("inline")
+            {
+                FileNameStar = doc.NomeArquivo // suporta acentos melhor
+            }.ToString();
+
+            // ✅ Retorna sem "fileDownloadName" para não virar attachment
+            return File(doc.Arquivo, doc.ContentType);
         }
 
         [HttpDelete("{docId:int}")]
