@@ -606,14 +606,18 @@ export class CadastroClienteComponent implements OnInit {
     });
   }
 
-  private prepararDocumentoParaUI(doc: any): void {
-    const url = doc.downloadUrl ?? doc.rawUrl; // fallback
-    doc.url = url;
+  private prepararDocumentoParaUI(doc: CadastroClientes): void {
+    if (!doc?.downloadUrl) return;
 
+    // 🔒 Corrige mixed content (HTTP → HTTPS)
+    const url = doc.downloadUrl.replace(/^http:\/\//i, 'https://');    
+
+    // PNG → preview direto
     if (doc.contentType === 'image/png') {
       doc.previewUrl = url;
     }
 
+    // PDF → iframe precisa de SafeResourceUrl
     if (doc.contentType === 'application/pdf') {
       doc.safeViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
