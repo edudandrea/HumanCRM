@@ -540,8 +540,19 @@ export class CadastroClienteComponent implements OnInit {
     this.fileInput.nativeElement.click();
   }
 
-  abrirPreview(doc: CadastroClientes, template: any): void {
+  abrirPreview(doc: any, template: any): void {
+    this.prepararDocumentoParaUI(doc); // garante preview
     this.documentoAtual = doc;
+
+    console.log('📄 Preview doc:', {
+      id: doc.id,
+      contentType: doc.contentType,
+      downloadUrl: doc.downloadUrl,
+      rawUrl: doc.rawUrl,
+      previewUrl: doc.previewUrl,
+      safeViewerUrl: doc.safeViewerUrl,
+    });
+
     this.modalRef = this.modalService.show(template, { class: 'modal-xl' });
   }
 
@@ -595,24 +606,26 @@ export class CadastroClienteComponent implements OnInit {
     });
   }
 
-  private prepararDocumentoParaUI(doc: CadastroClientes): void {
-    // ✅ PNG: previewUrl pode ser o próprio downloadUrl (se o endpoint devolver o arquivo direto)
+  private prepararDocumentoParaUI(doc: any): void {
+    const url = doc.downloadUrl ?? doc.rawUrl; // fallback
+    doc.url = url;
+
     if (doc.contentType === 'image/png') {
-      doc.previewUrl = doc.downloadUrl;
+      doc.previewUrl = url;
     }
 
-    // ✅ PDF: iframe precisa de SafeResourceUrl
     if (doc.contentType === 'application/pdf') {
-      doc.safeViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        doc.downloadUrl,
-      );
+      doc.safeViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }
 
   downloadDocumento(doc: any): void {
+    const url = doc.url ?? doc.downloadUrl ?? doc.rawUrl;
+    const nome = doc.nomeArquivo ?? doc.nome ?? 'documento';
+
     const a = document.createElement('a');
-    a.href = doc.rawUrl;
-    a.download = doc.nome;
+    a.href = url;
+    a.download = nome;
     a.target = '_blank';
     a.click();
     a.remove();
@@ -642,14 +655,19 @@ export class CadastroClienteComponent implements OnInit {
   }
 
   carregarDocumentosCliente(clienteId: number) {
-    this.documentos = []; // limpa antes
+    this.documentos = [];
 
     this.clienteService.listarDocumentos(clienteId).subscribe({
       next: (docs) => {
-        this.documentos = docs ?? [];
-        // se você usa previewUrl/safeViewerUrl, dá pra montar aqui também
+        const lista = (docs ?? []).map((d: any) => {
+          this.prepararDocumentoParaUI(d);
+          return d;
+        });
+
+        this.documentos = lista;
       },
-      error: () => {
+      error: (err) => {
+        console.error(err);
         this.documentos = [];
         this.toastr.error('Erro ao carregar documentos do cliente');
       },

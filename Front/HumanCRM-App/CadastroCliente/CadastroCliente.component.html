@@ -851,53 +851,67 @@
 
   <!-- Viewer (opcional) -->
   <ng-template #previewTemplate>
-    <div class="modal-header">
-      <h5 class="modal-title">{{ documentoAtual?.nomeArquivo }}</h5>
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Close"
-        (click)="fecharPreview()"
-      ></button>
-    </div>
+  <div class="modal-header preview-header">
+    <h5 class="modal-title">
+      <i class="fa-regular fa-file"></i>
+      {{ documentoAtual?.nomeArquivo }}
+    </h5>
 
-    <div class="modal-body">
-      <iframe
-        *ngIf="documentoAtual?.contentType === 'application/pdf'"
-        [src]="documentoAtual?.safeViewerUrl"
-        class="viewer-frame"
-      ></iframe>
+    <button
+      type="button"
+      class="btn-icon close"
+      title="Fechar"
+      (click)="fecharPreview()"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
 
-      <img
-        *ngIf="documentoAtual?.contentType === 'image/png'"
-        [src]="documentoAtual?.previewUrl"
-        class="viewer-image"
-        alt="imagem"
-      />
-    </div>
+  <div class="modal-body preview-body">
+    <iframe
+      *ngIf="documentoAtual?.contentType === 'application/pdf'"
+      [src]="documentoAtual?.safeViewerUrl"
+      class="viewer-frame"
+    ></iframe>
 
-    <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        (click)="downloadDocumento(documentoAtual!)"
-      >
-        <i class="fa-solid fa-download"></i> Download
-      </button>
+    <img
+      *ngIf="documentoAtual?.contentType === 'image/png'"
+      [src]="documentoAtual?.previewUrl"
+      class="viewer-image"
+      alt="imagem"
+    />
+  </div>
 
-      <button
-        type="button"
-        class="btn btn-outline-danger"
-        (click)="excluirDocumento(documentoAtual!)"
-      >
-        <i class="fa-regular fa-trash-can"></i> Excluir
-      </button>
+  <div class="modal-footer preview-footer">
+    <button
+      type="button"
+      class="btn-action ghost"
+      (click)="downloadDocumento(documentoAtual!)"
+    >
+      <i class="fa-solid fa-download"></i>
+      <span>Download</span>
+    </button>
 
-      <button type="button" class="btn btn-primary" (click)="fecharPreview()">
-        Fechar
-      </button>
-    </div>
-  </ng-template>
+    <button
+      type="button"
+      class="btn-action danger"
+      (click)="excluirDocumento(documentoAtual!)"
+    >
+      <i class="fa-regular fa-trash-can"></i>
+      <span>Excluir</span>
+    </button>
+
+    <button
+      type="button"
+      class="btn-action primary"
+      (click)="fecharPreview()"
+    >
+      <i class="fa-solid fa-check"></i>
+      <span>Fechar</span>
+    </button>
+  </div>
+</ng-template>
+
 </div>
 <ng-template #templateNovoCliente>
   <div class="modal-content modal-surface">
